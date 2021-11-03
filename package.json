@@ -18,14 +18,14 @@
     "test-build": "./dist/linux-unpacked/mobalytics-desktop"
   },
   "dependencies": {
-    "asar": "^3.1.0",
-    "node-7z": "^3.0.0",
-    "progress": "^2.0.3",
-    "progress-download": "^1.0.4",
-    "rimraf": "^3.0.2"
+    "asar": "3.1.0",
+    "node-7z": "3.0.0",
+    "progress": "2.0.3",
+    "progress-download": "1.0.4",
+    "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "electron": "^13.5.1",
-    "electron-builder": "^22.13.1"
+    "electron": "13.5.1",
+    "electron-builder": "22.13.1"
   }
 }
