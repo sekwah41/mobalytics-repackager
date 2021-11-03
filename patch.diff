@@ -58,6 +58,153 @@ diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/s
 -//# sourceMappingURL=deep-linking.js.map
 \ No newline at end of file
 +//# sourceMappingURL=deep-linking.js.map
+diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
+--- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-03 21:39:30.465190155 +0000
++++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-03 22:03:16.425137036 +0000
+@@ -170,7 +170,7 @@
+     }));
+     ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.IS_TOBII_AVAILABLE, () => {
+         return new Promise(resolve => {
+-            if (environment_1.isWin) {
++            if (environment_1.isWin || environment_1.isLinux) {
+                 const reader = new gaze_reader_process_1.GazeReaderProcess();
+                 reader
+                     .spawn(null)
+@@ -197,7 +197,7 @@
+     });
+     ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.CHECK_TOBII_TRACKER_STATUS, () => {
+         return new Promise(resolve => {
+-            if (environment_1.isWin) {
++            if (environment_1.isWin || environment_1.isLinux) {
+                 const reader = new gaze_reader_process_1.GazeReaderProcess();
+                 reader
+                     .spawn(null)
+@@ -242,4 +242,4 @@
+     app_settings_ipc_1.initAppSettingsIpc();
+ }
+ exports.init = init;
+-//# sourceMappingURL=ipc-protocol.js.map
+\ No newline at end of file
++//# sourceMappingURL=ipc-protocol.js.map
+diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
+--- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-03 21:39:30.461856822 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-03 22:04:34.991800776 +0000
+@@ -26,7 +26,7 @@
+         this.reader = null;
+         this.gamesInfoMap = null;
+         this.gameStarted = (gameId, summoner, qType) => {
+-            if (!environment_1.isWin)
++            if (!(environment_1.isWin || environment_1.isLinux))
+                 return;
+             if (!app_settings_1.getAppSettings().isTobiiEyeTrackerEnabled())
+                 return;
+@@ -42,7 +42,7 @@
+             });
+         };
+         this.gameFinished = (gameId) => {
+-            if (!environment_1.isWin)
++            if (!(environment_1.isWin || environment_1.isLinux))
+                 return;
+             if (!app_settings_1.getAppSettings().isTobiiEyeTrackerEnabled())
+                 return;
+@@ -202,4 +202,4 @@
+ }
+ exports.GazeReaderGameProcessor = GazeReaderGameProcessor;
+ GazeReaderGameProcessor.instance = null;
+-//# sourceMappingURL=gaze-reader-game-processor.js.map
+\ No newline at end of file
++//# sourceMappingURL=gaze-reader-game-processor.js.map
+diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified/moba-desktop/src/gaze-reader/gaze-reader-process.js
+--- original/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-03 21:39:30.461856822 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-03 22:05:11.151799428 +0000
+@@ -15,7 +15,7 @@
+         this.spawn = (targetPath) => {
+             var _a, _b;
+             logs_1.gazeReaderLog.debug(`Spawn ${paths_1.TOBII_BINARY_LOCAL_PATH}, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             if (this.readerProcess) {
+                 logs_1.gazeReaderLog.error(`Already spawned, pid: ${(_b = this.readerProcess) === null || _b === void 0 ? void 0 : _b.pid}`);
+@@ -56,7 +56,7 @@
+         this.kill = () => {
+             var _a, _b;
+             logs_1.gazeReaderLog.debug(`Kill, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return;
+             if (!this.readerProcess) {
+                 logs_1.gazeReaderLog.error(`Already killed`);
+@@ -132,7 +132,7 @@
+         this.write = (msg) => {
+             var _a, _b;
+             logs_1.gazeReaderLog.debug(`Write ${msg}, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return;
+             if (!this.readerProcess) {
+                 logs_1.gazeReaderLog.error('Unable to write', `process is killed`);
+@@ -178,7 +178,7 @@
+             return !!(this.unresolvedOpsList && this.unresolvedOpsList.length > 0);
+         };
+         this.isTobiiAvailable = () => {
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.IS_TOBII_AVAILABLE);
+@@ -187,7 +187,7 @@
+             });
+         };
+         this.checkTrackerStatus = () => {
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.CHECK_TRACKER_STATUS);
+@@ -196,7 +196,7 @@
+             });
+         };
+         this.sessionStart = (msg) => {
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_START);
+@@ -205,7 +205,7 @@
+             });
+         };
+         this.sessionUpdate = (msg) => {
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_UPDATE);
+@@ -214,7 +214,7 @@
+             });
+         };
+         this.sessionEnd = () => {
+-            if (!environment_1.isWin)
++            if ( !(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_END);
+@@ -223,7 +223,7 @@
+             });
+         };
+         this.stop = () => {
+-            if (!environment_1.isWin)
++            if (!(environment_1.isWin|| environment_1.isLinux))
+                 return Promise.reject();
+             return new Promise((resolve, reject) => {
+                 const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.PROCESS_STOP);
+@@ -234,4 +234,4 @@
+     }
+ }
+ exports.GazeReaderProcess = GazeReaderProcess;
+-//# sourceMappingURL=gaze-reader-process.js.map
+\ No newline at end of file
++//# sourceMappingURL=gaze-reader-process.js.map
 diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
 --- original/moba-desktop/src/utils/environment.js	2021-11-03 21:39:30.451856823 +0000
 +++ modified/moba-desktop/src/utils/environment.js	2021-11-03 21:43:23.018514825 +0000
