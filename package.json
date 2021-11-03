@@ -2,13 +2,14 @@
   "name": "mobalinux-repackager",
   "version": "1.0.0",
   "description": "Mobalytics tool for Linux",
-  "main": "src/repackager.js",
+  "main": "src/extract.js",
   "repository": "https://github.com/sekwah41/mobalinux",
   "author": "Sekwah",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "node src/repackager.js"
+    "extract": "node src/extract.js",
+    "postextract": "electron-builder install-app-deps"
   },
   "dependencies": {
     "asar": "^3.1.0",
@@ -16,5 +17,9 @@
     "progress": "^2.0.3",
     "progress-download": "^1.0.4",
     "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "electron": "^13.5.1",
+    "electron-builder": "^22.13.1"
   }
 }

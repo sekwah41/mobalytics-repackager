@@ -14,7 +14,7 @@ const appZip = path.join(mobalyticsUnpacked, "$PLUGINSDIR", "app-64.7z");
 const unpackContents = path.join(buildResFolder, "unpacked");
 const extractedAsar = path.join(buildResFolder, "extracted-asar");
 const asarFile = path.join(unpackContents, "resources", "app.asar");
-const rebuildFolder = path.join(__dirname, "../rebuild");
+const rebuildFolder = path.join(__dirname, "../app");
 const ProgressBar = require('progress');
 
 function extractAsync(name, stream) {
@@ -36,13 +36,6 @@ function extractAsync(name, stream) {
     });
 }
 
-function execCurrent(command) {
-    console.log(`Running '${command}'`);
-    exec(command, {
-        cwd: rebuildFolder,
-        stdio: 'inherit'
-    });
-}
 function removeIfExists(path) {
     if(fs.existsSync(path)) {
         rimraf.sync(path)
@@ -53,7 +46,7 @@ function removeIfExists(path) {
     if(!fs.existsSync(buildResFolder)) fs.mkdirSync(buildResFolder);
 
     if(!fs.existsSync(mobalyticsExe)) {
-        console.log("Downloading Mobalytics...");
+        console.log("Downloading Mobalytics");
         await download(mobalyticsExeUrl, buildResFolder);
     } else {
         console.log("Found Mobalytics, skipping download.");
@@ -79,7 +72,6 @@ function removeIfExists(path) {
 
     console.log("Deleting node_modules (these ones are meant for windows)");
     removeIfExists(node_modules);
-    execCurrent('npm install');
 
 })();
 
