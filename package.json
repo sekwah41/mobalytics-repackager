@@ -11,9 +11,10 @@
     "extract": "node src/extract.js",
     "postextract": "electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
-    "generate-patches": "diff -uarN b a > patches.diff",
-    "create-patched-src": "rm -rf modified-src && cp -R app/electron-src modified-src && cd modified-src && patch -i ../patch.diff",
-    "create-patch": "diff -uraN app/electron-src modified-src > patch.diff"
+    "create-patched-src": "rm -rf modified-src && rm -rf original-src && cp -R app/electron-src original-src && cp -R app/electron-src modified-src && cd modified-src && patch -p1 -i ../patch.diff",
+    "generate-patches": "diff -uraN original-src modified-src > patch.diff || true",
+    "reset-and-apply-patch": "rm -rf app/electron-src && cp -R original-src app/electron-src && yarn apply-patch",
+    "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff"
   },
   "dependencies": {
     "asar": "^3.1.0",

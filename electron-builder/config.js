@@ -7,8 +7,20 @@ module.exports = {
         icon: "./resources/icons",
         category: "Game",
         publish: ["github"],
+        /*"desktop": {
+            "MimeType": "x-scheme-handler/mobalytics;"
+        },*/
+        mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
-            "AppImage"
+            "dir",
+            //"AppImage",
+            //"pacman"
         ]
-    }
+    },
+    "protocols": [{
+        "name": "electron-deep-linking",
+        "schemes": [
+            "mobalytics"
+        ]
+    }],
 }

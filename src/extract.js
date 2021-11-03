@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const Seven = require('node-7z');
-const exec = require("child_process").execSync;
 const asar = require('asar');
 const rimraf = require('rimraf');
 const download = require('progress-download');
