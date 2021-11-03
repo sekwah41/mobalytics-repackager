@@ -1,0 +1,19 @@
+{
+  "name": "mobalinux-repackager",
+  "version": "1.0.0",
+  "description": "Mobalytics tool for Linux",
+  "main": "src/repackager.js",
+  "repository": "https://github.com/sekwah41/mobalinux",
+  "author": "Sekwah",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "node src/repackager.js"
+  },
+  "dependencies": {
+    "asar": "^3.1.0",
+    "node-7z": "^3.0.0",
+    "progress-download": "^1.0.4",
+    "rimraf": "^3.0.2"
+  }
+}
