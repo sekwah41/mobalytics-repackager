@@ -4,7 +4,6 @@ module.exports = {
     productName: `Mobalytics`,
     remoteBuild: false,
     linux: {
-        icon: "./resources/icons",
         category: "Game",
         publish: ["github"],
         /*"desktop": {
@@ -12,9 +11,9 @@ module.exports = {
         },*/
         mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
-            "dir",
+            //"dir",
             //"AppImage",
-            //"pacman"
+            "pacman"
         ]
     },
     "protocols": [{
