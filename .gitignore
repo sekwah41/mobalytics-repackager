@@ -5,3 +5,5 @@
 
 # To take advantage of the two package build mode for electron-builder (may be able to use other names)
 /app/
+/dist/
+/modified-src/

@@ -9,7 +9,11 @@
   "private": true,
   "scripts": {
     "extract": "node src/extract.js",
-    "postextract": "electron-builder install-app-deps"
+    "postextract": "electron-builder install-app-deps",
+    "dist": "electron-builder --config electron-builder/config.js",
+    "generate-patches": "diff -uarN b a > patches.diff",
+    "create-patched-src": "rm -rf modified-src && cp -R app/electron-src modified-src && cd modified-src && patch -i ../patch.diff",
+    "create-patch": "diff -uraN app/electron-src modified-src > patch.diff"
   },
   "dependencies": {
     "asar": "^3.1.0",
