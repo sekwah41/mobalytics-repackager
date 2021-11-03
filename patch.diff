@@ -86,6 +86,16 @@ diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/m
 -//# sourceMappingURL=ipc-protocol.js.map
 \ No newline at end of file
 +//# sourceMappingURL=ipc-protocol.js.map
+diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
+--- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-03 21:39:30.465190155 +0000
++++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-03 22:22:13.321761353 +0000
+@@ -46,4 +46,4 @@
+     }
+ }
+ exports.showSelectFolderDialog = showSelectFolderDialog;
+-//# sourceMappingURL=select-game-folder-dialog.js.map
+\ No newline at end of file
++//# sourceMappingURL=select-game-folder-dialog.js.map
 diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
 --- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-03 21:39:30.461856822 +0000
 +++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-03 22:04:34.991800776 +0000
@@ -207,8 +217,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
 +//# sourceMappingURL=gaze-reader-process.js.map
 diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
 --- original/moba-desktop/src/utils/environment.js	2021-11-03 21:39:30.451856823 +0000
-+++ modified/moba-desktop/src/utils/environment.js	2021-11-03 21:43:23.018514825 +0000
-@@ -23,6 +23,7 @@
++++ modified/moba-desktop/src/utils/environment.js	2021-11-03 22:21:36.471762725 +0000
+@@ -23,15 +23,16 @@
  const path = __importStar(require("path"));
  exports.isOsX = process.platform === 'darwin';
  exports.isWin = process.platform === 'win32';
@@ -216,10 +226,26 @@ diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/
  exports.isX64 = process.arch === 'x64';
  exports.IS_JEST_TESTING = process.env.JEST_WORKER_ID !== undefined;
  exports.IS_ELECTRON_DEV = require('electron-is-dev');
-@@ -34,4 +35,4 @@
- exports.RiotClientName = exports.isWin ? exports.RiotClientNameWin : exports.RiotClientNameMac;
+ exports.LoLProcessNameWin = 'LeagueClient.exe';
+ exports.LoLProcessNameMac = 'LeagueClient.app';
+-exports.LolProcessName = exports.isWin ? exports.LoLProcessNameWin : exports.LoLProcessNameMac;
++exports.LolProcessName = (exports.isWin || exports.isLinux) ? exports.LoLProcessNameWin : exports.LoLProcessNameMac;
+ exports.RiotClientNameWin = 'RiotClientServices.exe';
+ exports.RiotClientNameMac = '';
+-exports.RiotClientName = exports.isWin ? exports.RiotClientNameWin : exports.RiotClientNameMac;
++exports.RiotClientName = (exports.isWin || exports.isLinux) ? exports.RiotClientNameWin : exports.RiotClientNameMac;
  exports.LolLogsSubPath = path.join('Logs', 'GameLogs');
  exports.DEV_APP_VERSION = '999.999.999';
 -//# sourceMappingURL=environment.js.map
 \ No newline at end of file
 +//# sourceMappingURL=environment.js.map
+diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
+--- original/moba-desktop/src/utils/lcu-connection.js	2021-11-03 21:39:30.451856823 +0000
++++ modified/moba-desktop/src/utils/lcu-connection.js	2021-11-03 22:22:13.348428017 +0000
+@@ -124,4 +124,4 @@
+     });
+ }
+ exports.isValidLCUPath = isValidLCUPath;
+-//# sourceMappingURL=lcu-connection.js.map
+\ No newline at end of file
++//# sourceMappingURL=lcu-connection.js.map
