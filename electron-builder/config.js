@@ -9,7 +9,7 @@ module.exports = {
         /*"desktop": {
             "MimeType": "x-scheme-handler/mobalytics;"
         },*/
-        mimeTypes: ["x-scheme-handler/mobalytics"],
+        //mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
             //"dir",
             "AppImage",
@@ -17,7 +17,7 @@ module.exports = {
         ]
     },
     "protocols": [{
-        "name": "electron-deep-linking",
+        "name": "mobalytics",
         "schemes": [
             "mobalytics"
         ]
