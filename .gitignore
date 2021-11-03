@@ -2,3 +2,4 @@
 .idea/
 /build-resources/
 /node_modules/
+/rebuild/
