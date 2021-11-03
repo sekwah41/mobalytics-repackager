@@ -26,6 +26,38 @@ diff -uraN original/moba-desktop/src/app/auto-update.js modified/moba-desktop/sr
 -//# sourceMappingURL=auto-update.js.map
 \ No newline at end of file
 +//# sourceMappingURL=auto-update.js.map
+diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
+--- original/moba-desktop/src/app/deep-linking.js	2021-11-03 21:39:30.465190155 +0000
++++ modified/moba-desktop/src/app/deep-linking.js	2021-11-03 21:57:40.461816218 +0000
+@@ -34,8 +34,10 @@
+ const ipc_messages_types_1 = require("../../../moba-web/src/common/types/desktop/ipc-messages.types");
+ function initDeepLinking() {
+     electron_1.app.removeAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME);
+-    if (environment_1.IS_ELECTRON_DEV && environment_1.isWin) {
+-        electron_1.app.setAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME, process.execPath, [path.resolve(process.argv[1])]);
++    if (process.defaultApp) {
++        if (process.argv.length >= 2) {
++            electron_1.app.setAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME, process.execPath, [path.resolve(process.argv[1])]);
++        }
+     }
+     else {
+         electron_1.app.setAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME);
+@@ -52,7 +54,7 @@
+         main_window_1.showAndRestoreMainWindow();
+     });
+     electron_1.app.on('second-instance', (_e, argv) => {
+-        if (environment_1.isWin) {
++        if (environment_1.isWin || environment_1.isLinux) {
+             const url = argv.find(it => it.startsWith(`${app_config_1.MOBA_PROTOCOL_NAME}:`));
+             url && processDeepLinkingUrl(url);
+         }
+@@ -84,4 +86,4 @@
+         logs_1.appUrlsLog.error('Unknown moba protocol communication url: ', { url });
+     }
+ }
+-//# sourceMappingURL=deep-linking.js.map
+\ No newline at end of file
++//# sourceMappingURL=deep-linking.js.map
 diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
 --- original/moba-desktop/src/utils/environment.js	2021-11-03 21:39:30.451856823 +0000
 +++ modified/moba-desktop/src/utils/environment.js	2021-11-03 21:43:23.018514825 +0000
