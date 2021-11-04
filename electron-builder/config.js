@@ -4,8 +4,12 @@ module.exports = {
     productName: `Mobalytics`,
     remoteBuild: false,
     directories: {
-      buildResources: "app"
+        buildResources: "app"
     },
+    files: [
+        "electron-src/**/*",
+        "resources/**",
+    ],
     linux: {
         icon: "resources/icons/",
         category: "Game",

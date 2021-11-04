@@ -9,3 +9,5 @@
 /src/modified/
 /src/original/
 /build/
+
+*.log

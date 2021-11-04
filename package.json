@@ -17,6 +17,7 @@
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
     "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
+    "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
     "setup": "yarn clean && yarn extract && yarn create-patched-src"
   },
   "dependencies": {
@@ -28,7 +29,7 @@
     "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "electron": "13.5.1",
+    "electron": "13.6.1",
     "electron-builder": "22.13.1"
   }
 }

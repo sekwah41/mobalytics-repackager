@@ -1,6 +1,6 @@
 diff -uraN original/moba-desktop/src/app/auto-update.js modified/moba-desktop/src/app/auto-update.js
---- original/moba-desktop/src/app/auto-update.js	2021-11-04 00:37:06.808127003 +0000
-+++ modified/moba-desktop/src/app/auto-update.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/app/auto-update.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/app/auto-update.js	2021-11-04 14:36:06.440997325 +0000
 @@ -23,7 +23,7 @@
  function init() {
      electron_updater_1.autoUpdater.autoDownload = false;
@@ -27,8 +27,8 @@ diff -uraN original/moba-desktop/src/app/auto-update.js modified/moba-desktop/sr
 \ No newline at end of file
 +//# sourceMappingURL=auto-update.js.map
 diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
---- original/moba-desktop/src/app/deep-linking.js	2021-11-04 00:37:06.808127003 +0000
-+++ modified/moba-desktop/src/app/deep-linking.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/app/deep-linking.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/app/deep-linking.js	2021-11-04 14:36:06.440997325 +0000
 @@ -34,8 +34,10 @@
  const ipc_messages_types_1 = require("../../../moba-web/src/common/types/desktop/ipc-messages.types");
  function initDeepLinking() {
@@ -59,8 +59,8 @@ diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/s
 \ No newline at end of file
 +//# sourceMappingURL=deep-linking.js.map
 diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
---- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 00:37:06.808127003 +0000
-+++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 14:36:06.440997325 +0000
 @@ -170,7 +170,7 @@
      }));
      ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.IS_TOBII_AVAILABLE, () => {
@@ -87,8 +87,8 @@ diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/m
 \ No newline at end of file
 +//# sourceMappingURL=ipc-protocol.js.map
 diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
---- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 00:37:06.808127003 +0000
-+++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 14:36:06.440997325 +0000
 @@ -46,4 +46,4 @@
      }
  }
@@ -97,8 +97,8 @@ diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modifi
 \ No newline at end of file
 +//# sourceMappingURL=select-game-folder-dialog.js.map
 diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
---- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 00:37:06.804793670 +0000
-+++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 14:36:06.440997325 +0000
 @@ -26,7 +26,7 @@
          this.reader = null;
          this.gamesInfoMap = null;
@@ -125,8 +125,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js m
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-game-processor.js.map
 diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified/moba-desktop/src/gaze-reader/gaze-reader-process.js
---- original/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 00:37:06.808127003 +0000
-+++ modified/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 14:36:06.417663993 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 14:36:06.440997325 +0000
 @@ -15,7 +15,7 @@
          this.spawn = (targetPath) => {
              var _a, _b;
@@ -216,8 +216,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-process.js.map
 diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
---- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 00:37:06.801460334 +0000
-+++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 14:36:06.414330658 +0000
++++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 14:36:06.440997325 +0000
 @@ -44,7 +44,7 @@
              if (!gameItemsData.blocks.length)
                  return in_game_imports_types_1.LcuGameItemsImportStatus.EMPTY_BLOCKS_LIST;
@@ -235,8 +235,8 @@ diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-imp
 \ No newline at end of file
 +//# sourceMappingURL=in-game-items-import.js.map
 diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
---- original/moba-desktop/src/utils/environment.js	2021-11-04 00:37:06.791460337 +0000
-+++ modified/moba-desktop/src/utils/environment.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/utils/environment.js	2021-11-04 14:36:06.407663993 +0000
++++ modified/moba-desktop/src/utils/environment.js	2021-11-04 14:37:21.924329550 +0000
 @@ -23,15 +23,16 @@
  const path = __importStar(require("path"));
  exports.isOsX = process.platform === 'darwin';
@@ -244,7 +244,8 @@ diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/
 +exports.isLinux = process.platform === 'linux';
  exports.isX64 = process.arch === 'x64';
  exports.IS_JEST_TESTING = process.env.JEST_WORKER_ID !== undefined;
- exports.IS_ELECTRON_DEV = require('electron-is-dev');
+-exports.IS_ELECTRON_DEV = require('electron-is-dev');
++exports.IS_ELECTRON_DEV = false;
  exports.LoLProcessNameWin = 'LeagueClient.exe';
  exports.LoLProcessNameMac = 'LeagueClient.app';
 -exports.LolProcessName = exports.isWin ? exports.LoLProcessNameWin : exports.LoLProcessNameMac;
@@ -259,8 +260,8 @@ diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/
 \ No newline at end of file
 +//# sourceMappingURL=environment.js.map
 diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
---- original/moba-desktop/src/utils/lcu-connection.js	2021-11-04 00:37:06.791460337 +0000
-+++ modified/moba-desktop/src/utils/lcu-connection.js	2021-11-04 00:37:06.841460335 +0000
+--- original/moba-desktop/src/utils/lcu-connection.js	2021-11-04 14:36:06.407663993 +0000
++++ modified/moba-desktop/src/utils/lcu-connection.js	2021-11-04 14:36:06.440997325 +0000
 @@ -124,4 +124,4 @@
      });
  }
@@ -269,8 +270,8 @@ diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-deskt
 \ No newline at end of file
 +//# sourceMappingURL=lcu-connection.js.map
 diff -uraN original/moba-desktop/src/windows/main/main.window.js modified/moba-desktop/src/windows/main/main.window.js
---- original/moba-desktop/src/windows/main/main.window.js	2021-11-04 00:37:06.791460337 +0000
-+++ modified/moba-desktop/src/windows/main/main.window.js	2021-11-04 01:44:51.204642264 +0000
+--- original/moba-desktop/src/windows/main/main.window.js	2021-11-04 14:36:06.407663993 +0000
++++ modified/moba-desktop/src/windows/main/main.window.js	2021-11-04 14:36:06.440997325 +0000
 @@ -75,6 +75,7 @@
              },
              show: false,
