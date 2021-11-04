@@ -215,6 +215,25 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
 -//# sourceMappingURL=gaze-reader-process.js.map
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-process.js.map
+diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
+--- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-03 21:39:30.458523489 +0000
++++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-03 23:59:44.708210525 +0000
+@@ -44,7 +44,7 @@
+             if (!gameItemsData.blocks.length)
+                 return in_game_imports_types_1.LcuGameItemsImportStatus.EMPTY_BLOCKS_LIST;
+             const processGamePath = yield lcu_connection_1.getLCUPathFromProcess();
+-            const gamePath = processGamePath || app_settings_1.getAppSettings().getGameFolderPath();
++            const gamePath = app_settings_1.getAppSettings().getGameFolderPath();
+             if (!gamePath)
+                 return in_game_imports_types_1.LcuGameItemsImportStatus.GAME_PATH_NOT_FOUND;
+             const filePath = path_1.default.join(gamePath, 'Config', 'Global', 'Recommended', '!mobalytics.json');
+@@ -70,4 +70,4 @@
+     });
+ }
+ exports.importLolGameItems = importLolGameItems;
+-//# sourceMappingURL=in-game-items-import.js.map
+\ No newline at end of file
++//# sourceMappingURL=in-game-items-import.js.map
 diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
 --- original/moba-desktop/src/utils/environment.js	2021-11-03 21:39:30.451856823 +0000
 +++ modified/moba-desktop/src/utils/environment.js	2021-11-03 22:21:36.471762725 +0000
