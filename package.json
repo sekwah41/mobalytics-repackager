@@ -17,11 +17,14 @@
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
     "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
-    "setup": "yarn clean && yarn extract && yarn create-patched-src"
+    "setup": "yarn clean && yarn extract && yarn create-patched-src",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "asar": "3.1.0",
     "node-7z": "3.0.0",
+    "postinstall-postinstall": "^2.1.0",
+    "patch-package": "^6.4.7",
     "progress": "2.0.3",
     "progress-download": "1.0.4",
     "rimraf": "3.0.2"

@@ -1,0 +1,19 @@
+diff --git a/node_modules/app-builder-lib/templates/snap/snapcraft.yaml b/node_modules/app-builder-lib/templates/snap/snapcraft.yaml
+index 08ed960..77a8c5f 100644
+--- a/node_modules/app-builder-lib/templates/snap/snapcraft.yaml
++++ b/node_modules/app-builder-lib/templates/snap/snapcraft.yaml
+@@ -1,4 +1,4 @@
+-base: core18
++base: core20
+ grade: stable
+ confinement: strict
+ parts:
+@@ -129,6 +129,8 @@ parts:
+       - "-usr/lib/*/libxml2*"
+       - "-usr/lib/*/libXrandr*"
+       - "-usr/lib/*/libXrender*"
++    prime:
++      - "-lib/systemd"
+ plugs:
+   gnome-3-28-1804:
+     interface: content
