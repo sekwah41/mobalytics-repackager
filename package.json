@@ -16,7 +16,7 @@
     "generate-patches": "cd src && diff -uraN original modified > ../patch.diff || true",
     "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
-    "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources",
+    "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
     "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
     "setup": "yarn clean && yarn extract && yarn create-patched-src"
