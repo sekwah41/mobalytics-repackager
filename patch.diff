@@ -268,3 +268,21 @@ diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-deskt
 -//# sourceMappingURL=lcu-connection.js.map
 \ No newline at end of file
 +//# sourceMappingURL=lcu-connection.js.map
+diff -uraN original/moba-desktop/src/windows/main/main.window.js modified/moba-desktop/src/windows/main/main.window.js
+--- original/moba-desktop/src/windows/main/main.window.js	2021-11-04 00:37:06.791460337 +0000
++++ modified/moba-desktop/src/windows/main/main.window.js	2021-11-04 01:44:51.204642264 +0000
+@@ -75,6 +75,7 @@
+             },
+             show: false,
+             resizable: true,
++            icon: path.join(__dirname, "../../../../../resources/icons/512x512.png"),
+             frame: false,
+             titleBarStyle: 'hidden',
+             maximizable: true,
+@@ -241,4 +242,4 @@
+     window.loadURL(navigation_1.getSafetyWindowURL(url_1.AppPath.FORCE_DESKTOP_APP_UPDATE));
+ }
+ exports.redirectToForceUpdatePage = redirectToForceUpdatePage;
+-//# sourceMappingURL=main.window.js.map
+\ No newline at end of file
++//# sourceMappingURL=main.window.js.map

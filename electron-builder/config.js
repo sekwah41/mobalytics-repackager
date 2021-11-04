@@ -1,23 +1,23 @@
 
 module.exports = {
-    appId: `com.sekwah.mobalinux`,
+    appId: `com.sekwah.mobalytics-repackager`,
     productName: `Mobalytics`,
     remoteBuild: false,
+    directories: {
+      buildResources: "app"
+    },
     linux: {
+        icon: "resources/icons/",
         category: "Game",
         publish: ["github"],
-        /*"desktop": {
-            "MimeType": "x-scheme-handler/mobalytics;"
-        },*/
-        //mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
             "AppImage",
             "snap"
         ]
     },
-    "protocols": [{
-        "name": "mobalytics",
-        "schemes": [
+    protocols: [{
+        name: "mobalytics",
+        schemes: [
             "mobalytics"
         ]
     }],
