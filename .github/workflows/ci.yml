@@ -17,13 +17,9 @@ jobs:
           path: ~/.yarn/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('package.json') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Install NPM Packages
+      - name: Setup Project
         run: |
           yarn install --immutable
-      - name: Download and extract Mobalytics files
-        run: yarn extract
-      - name: Apply Patches
-        run: yarn apply-patch
       - name: Build Electron App
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -15,7 +15,8 @@ module.exports = {
         category: "Game",
         publish: ["github"],
         target: [
-            "AppImage"
+            "AppImage",
+            "snap"
         ]
     },
     protocols: [{

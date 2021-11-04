@@ -12,3 +12,6 @@ The setup is a little fiddly, though make sure to only modify the modified-src f
 To try snapcraft building locally try `snapcraft build` rather than using electron-builder.
 
 ![Mobalytics](.github/images/img.png)
+
+
+Due to some weirdness with the snapcraft that I dont really want to figure out(kept using wrong node version and yarn version)
