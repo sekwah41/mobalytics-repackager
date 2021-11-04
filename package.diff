@@ -1,0 +1,17 @@
+--- package-old.json	2021-11-04 15:54:52.644000000 +0000
++++ package.json	2021-11-04 15:58:26.950924966 +0000
+@@ -51,6 +51,7 @@
+     "js-sha256": "^0.9.0",
+     "lodash.throttle": "4.1.1",
+     "lol-lockfile-parser": "^1.0.2",
++    "@electron/remote": "^2.0.1",
+     "make-promises-safe": "^5.1.0",
+     "node-fetch": "^2.6.0",
+     "plist": "^3.0.1",
+@@ -69,4 +70,4 @@
+     "winston-daily-rotate-file": "^4.5.5",
+     "ws": "^7.2.0"
+   }
+-}
+\ No newline at end of file
++}

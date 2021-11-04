@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "extract": "node src/extract.js",
-    "postextract": "electron-builder install-app-deps",
+    "patch-package": "cd app && patch -i ../package.diff",
+    "postextract": "yarn patch-package && electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
     "generate-patches": "cd src && diff -uraN original modified > ../patch.diff || true",
@@ -29,7 +30,7 @@
     "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "electron": "13.6.1",
+    "electron": "14.2.0",
     "electron-builder": "22.13.1"
   }
 }
