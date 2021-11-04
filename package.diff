@@ -5,7 +5,7 @@
      "lodash.throttle": "4.1.1",
      "lol-lockfile-parser": "^1.0.2",
 +    "@electron/remote": "^2.0.1",
-+    "electron-prompt": "1.7.0",
++    "electron-prompt": "^1.7.0",
      "make-promises-safe": "^5.1.0",
      "node-fetch": "^2.6.0",
      "plist": "^3.0.1",
