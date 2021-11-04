@@ -1,0 +1,39 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: Cache .yarn/cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('package.json') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Install NPM Packages
+        run: |
+          yarn install --immutable
+      - name: Download and extract Mobalytics files
+        run: yarn extract
+      - name: Apply Patches
+        run: yarn apply-patch
+      - name: Build Electron App
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn dist
+      - uses: actions/upload-artifact@v2
+        with:
+          name: AppImage
+          path: dist/*.AppImage
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Snap
+          path: dist/*.snap
+

@@ -11,9 +11,8 @@ module.exports = {
         },*/
         //mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
-            //"dir",
             "AppImage",
-            //"pacman"
+            "snap"
         ]
     },
     "protocols": [{

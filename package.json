@@ -1,6 +1,6 @@
 {
   "name": "mobalytics-repackager",
-  "version": "1.0.0",
+  "version": "1.87.12",
   "description": "Mobalytics tool for Linux",
   "main": "src/extract.js",
   "repository": "https://github.com/sekwah41/mobalinux",
@@ -15,7 +15,9 @@
     "generate-patches": "cd src && diff -uraN original modified > ../patch.diff || true",
     "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
-    "test-build": "./dist/linux-unpacked/mobalytics-desktop"
+    "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources",
+    "test-build": "./dist/linux-unpacked/mobalytics-desktop",
+    "setup": "yarn clean && yarn extract && yarn create-patched-src"
   },
   "dependencies": {
     "asar": "3.1.0",
