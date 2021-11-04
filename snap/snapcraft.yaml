@@ -1,0 +1,68 @@
+name: mobalytics-desktop
+adopt-info: mobalytics-desktop
+version: '1.87.12'
+base: core18
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: amd64
+
+apps:
+  mobalytics-desktop:
+    command: desktop-launch $SNAP/app/mobalytics-desktop --no-sandbox
+    extensions: [gnome-3-28]
+    plugs:
+      - audio-playback
+      - desktop
+      - desktop-legacy
+      - home
+      - x11
+      - unity7
+      - browser-support
+      - network
+      - gsettings
+      - pulseaudio
+      - opengl
+    environment:
+      TMPDIR: $XDG_RUNTIME_DIR
+      # Fallback to XWayland if running in a Wayland session.
+      DISABLE_WAYLAND: 1
+
+parts:
+  mobalytics-desktop:
+    source: ./
+    plugin: nodejs
+    nodejs-version: 16.11.0
+
+    build-packages:
+      - build-essential
+      - p7zip-full
+    stage-packages:
+      - libasound2
+      - libgconf2-4
+      - libnotify4
+      - libnspr4
+      - libnss3
+      - libpcre3
+      - libpulse0
+      - libxss1
+      - libxtst6
+      - libglu1-mesa
+    override-build: |
+      export PATH=$PATH:../npm/bin
+      npm config set unsafe-perm True
+      if [ -n "$http_proxy" ]; then
+        export ELECTRON_GET_USE_PROXY=1
+        export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
+        export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
+      fi
+      snapcraftctl build
+      yarn run extract
+      yarn run apply-patch
+      yarn run dist
+      rm -rf $SNAPCRAFT_PART_INSTALL/app
+      mkdir -p $SNAPCRAFT_PART_INSTALL/app
+      mv dist/linux-unpacked/* $SNAPCRAFT_PART_INSTALL/app
+    prime:
+      - -node_modules

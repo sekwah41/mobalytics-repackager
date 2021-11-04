@@ -8,3 +8,7 @@ certain files.
 
 
 The setup is a little fiddly, though make sure to only modify the modified-src folder while creating the patches.
+
+To try snapcraft building locally try `snapcraft build` rather than using electron-builder.
+
+![Mobalytics](.github/images/img.png)
