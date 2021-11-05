@@ -11,3 +11,4 @@
 /build/
 
 *.log
+/moba-package-backup.json
