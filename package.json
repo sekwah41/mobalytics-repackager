@@ -27,7 +27,7 @@
     "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload"
   },
   "dependencies": {
-    "7zip-bin": "^5.1.1",
+    "7zip-bin": "5.1.1",
     "asar": "3.1.0",
     "node-7z": "3.0.0",
     "progress": "2.0.3",
