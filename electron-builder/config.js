@@ -14,10 +14,10 @@ module.exports = {
         icon: "resources/icons/",
         category: "Game",
         publish: ["github"],
-        target: [
-            "AppImage",
-            "snap"
-        ]
+        target: process.env.DIR_ONLY ? [
+            "dir",
+        ] : ["AppImage",
+            "snap"],
     },
     protocols: [{
         name: "mobalytics",
