@@ -10,6 +10,9 @@ module.exports = {
         "electron-src/**/*",
         "resources/**",
     ],
+    extraResources: [
+        "app/injection-connector.exe"
+    ],
     linux: {
         icon: "resources/icons/",
         category: "Game",

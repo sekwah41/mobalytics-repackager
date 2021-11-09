@@ -24,7 +24,8 @@
     "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
     "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && yarn dist",
     "snap-build": "yarn deep-clean && snapcraft build",
-    "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload"
+    "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload",
+    "compile-injection-connector": "pkg src/injection-connector/main.js --target=windows --output=app/injection-connector"
   },
   "dependencies": {
     "7zip-bin": "5.1.1",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "electron": "14.2.0",
-    "electron-builder": "22.13.1"
+    "electron-builder": "22.13.1",
+    "pkg": "5.4.1"
   }
 }
