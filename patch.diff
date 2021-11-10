@@ -68,6 +68,34 @@ diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/s
 -//# sourceMappingURL=deep-linking.js.map
 \ No newline at end of file
 +//# sourceMappingURL=deep-linking.js.map
+diff -uraN original/moba-desktop/src/app/ipc-protocol/app-update.ipc.js modified/moba-desktop/src/app/ipc-protocol/app-update.ipc.js
+--- original/moba-desktop/src/app/ipc-protocol/app-update.ipc.js	2021-11-07 22:56:04.463408703 +0000
++++ modified/moba-desktop/src/app/ipc-protocol/app-update.ipc.js	2021-11-10 02:15:17.865810541 +0000
+@@ -3,13 +3,12 @@
+ exports.initAppUpdateIpc = void 0;
+ const ipc_main_1 = require("../../utils/ipc-main");
+ const ipc_messages_types_1 = require("../../../../moba-web/src/common/types/desktop/ipc-messages.types");
+-const auto_update_1 = require("../auto-update");
+ const game_overlay_manager_1 = require("../../game-overlay/game-overlay-manager");
+ function initAppUpdateIpc() {
+-    ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.IS_UPDATE_AVAILABLE, () => auto_update_1.isUpdateAvailable());
+-    ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.CHECK_FOR_UPDATE, () => auto_update_1.checkForUpdates());
+-    ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.DOWNLOAD_UPDATE, () => auto_update_1.downloadUpdate());
+-    ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.APPLY_UPDATE, () => auto_update_1.quitAndInstall());
++    //ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.IS_UPDATE_AVAILABLE, () => auto_update_1.isUpdateAvailable());
++   // ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.CHECK_FOR_UPDATE, () => auto_update_1.checkForUpdates());
++    //ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.DOWNLOAD_UPDATE, () => auto_update_1.downloadUpdate());
++    //ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.APPLY_UPDATE, () => auto_update_1.quitAndInstall());
+     ipc_main_1.ipcMainOn(ipc_messages_types_1.IPC_MESSAGE.OVERLAY_LOADED, (_, windowId) => {
+         const gameOverlayManager = game_overlay_manager_1.GameOverlayManager.getInstance();
+         const overlayWindow = gameOverlayManager.getOverlayWindow(windowId);
+@@ -17,4 +16,4 @@
+     });
+ }
+ exports.initAppUpdateIpc = initAppUpdateIpc;
+-//# sourceMappingURL=app-update.ipc.js.map
+\ No newline at end of file
++//# sourceMappingURL=app-update.ipc.js.map
 diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
 --- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-07 22:56:04.463408703 +0000
 +++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-07 22:56:04.483408704 +0000
@@ -96,6 +124,16 @@ diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/m
 -//# sourceMappingURL=ipc-protocol.js.map
 \ No newline at end of file
 +//# sourceMappingURL=ipc-protocol.js.map
+diff -uraN original/moba-desktop/src/common/api/connectors/graphql-request-client/graphql-connector.js modified/moba-desktop/src/common/api/connectors/graphql-request-client/graphql-connector.js
+--- original/moba-desktop/src/common/api/connectors/graphql-request-client/graphql-connector.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/common/api/connectors/graphql-request-client/graphql-connector.js	2021-11-10 01:58:57.892513712 +0000
+@@ -176,4 +176,4 @@
+     }
+ }
+ exports.GraphqlConnector = GraphqlConnector;
+-//# sourceMappingURL=graphql-connector.js.map
+\ No newline at end of file
++//# sourceMappingURL=graphql-injection.js.map
 diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
 --- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-07 22:56:04.460075371 +0000
 +++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-07 22:56:04.486742037 +0000
@@ -200,10 +238,54 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 -//# sourceMappingURL=game-overlay-manager.js.map
 \ No newline at end of file
 +//# sourceMappingURL=game-overlay-manager.js.map
+diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
+--- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-10 02:28:39.292447353 +0000
+@@ -0,0 +1,40 @@
++const child_process_1 = require("child_process");
++const process_utils_1 = require("../utils/process.utils");
++const fs = require("fs");
++
++module.exports = {
++    getLeagueEnvVariables: ()  => {
++        return new Promise((resolve,reject) => {
++            child_process_1.exec("ps -ax | grep -v grep | grep wine | grep LeagueClient.exe", (err, stdout) => {
++                if(err) {
++                    process_utils_1.log("Could not find wine start process");
++                    reject();
++                    return;
++                }
++                try {
++                    const processId = /([0-9])+/.exec(stdout);
++                    if(processId) {
++                        process_utils_1.log(`Reading /proc/${processId[0]}/environ`);
++                        const envVariables = fs.readFileSync(`/proc/${processId[0]}/environ`).toString('utf8').split('\0').map(value => {
++                            const indexOf = value.indexOf('=');
++                            return [value.slice(0,indexOf), value.slice(indexOf + 1)];
++                        });
++                        const leagueEnv = {};
++                        envVariables.forEach(value => {
++                            if(value[0].length > 0) {
++                                leagueEnv[value[0]] = value[1];
++                            }
++                        });
++                        resolve(leagueEnv);
++                        return;
++                    } else {
++                        process_utils_1.log("Could not find wine start process");
++                    }
++                    reject();
++                } catch(e) {
++                    reject();
++                }
++            });
++        });
++    }
++}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 01:06:43.862630463 +0000
-@@ -0,0 +1,161 @@
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 02:26:52.182451343 +0000
+@@ -0,0 +1,127 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -218,41 +300,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +const process_utils_1 = require("../../utils/process.utils");
 +const fs = require('fs');
 +const path = require('path');
-+
-+function getLeagueEnvVariables() {
-+    return new Promise((resolve,reject) => {
-+        child_process_1.exec("ps -ax | grep -v grep | grep wine | grep LeagueClient.exe", (err, stdout) => {
-+            if(err) {
-+                process_utils_1.log("Could not find wine start process");
-+                reject();
-+                return;
-+            }
-+            try {
-+                const processId = /([0-9])+/.exec(stdout);
-+                if(processId) {
-+                    process_utils_1.log(`Reading /proc/${processId[0]}/environ`);
-+                    const envVariables = fs.readFileSync(`/proc/${processId[0]}/environ`).toString('utf8').split('\0').map(value => {
-+                        const indexOf = value.indexOf('=');
-+                        return [value.slice(0,indexOf), value.slice(indexOf + 1)];
-+                    });
-+                    const leagueEnv = {};
-+                    envVariables.forEach(value => {
-+                        if(value[0].length > 0) {
-+                            leagueEnv[value[0]] = value[1];
-+                        }
-+                    });
-+                    resolve(leagueEnv);
-+                    return;
-+                } else {
-+                    process_utils_1.log("Could not find wine start process");
-+                }
-+                reject();
-+            } catch(e) {
-+                reject();
-+            }
-+        });
-+    });
-+}
++const { getLeagueEnvVariables } = require("../league-helper");
 +
 +const INJECTION_CONNECTOR_NAME = "injection-connector.exe";
 +
@@ -458,6 +506,135 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/win-overlay-i
 -//# sourceMappingURL=win-overlay-injector.js.map
 \ No newline at end of file
 +//# sourceMappingURL=win-overlay-injector.js.map
+diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js
+--- original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-10 02:43:37.105747242 +0000
+@@ -18,10 +18,21 @@
+ const game_overlay_provider_1 = require("../../utils/game-overlay/game-overlay-provider");
+ const game_overlay_provider_types_1 = require("../../types/game-overlay/game-overlay-provider.types");
+ const paths_1 = require("../../paths");
++const path = require("path");
++const fs = require("fs");
++const process_utils_1 = require("../../utils/process.utils");
++const child_process_1 = require("child_process");
+ var FrameBuffer = game_overlay_provider_types_1.OverlayIPC.FrameBuffer;
++const OVERLAY_PROVIDER_NAME = path.join("overlay-provider.exe");
++const { getLeagueEnvVariables } = require("../league-helper");
+ class BaseOverlayProvider extends events_1.EventEmitter {
+     constructor() {
+         super();
++        this.overlayConnectorDir = path.join(paths_1.OVERLAY_MODULE_WIN_PATH, "../");
++        this.overlayConnectorExe = path.join(this.overlayConnectorDir, OVERLAY_PROVIDER_NAME);
++        if(fs.existsSync(this.overlayConnectorExe)) fs.rmSync(this.overlayConnectorExe);
++        fs.copyFileSync(path.join(process.resourcesPath, "app", OVERLAY_PROVIDER_NAME), this.overlayConnectorExe);
++
+         this.builder = new flatbuffers_1.flatbuffers.Builder(1024);
+         this.debugInputEvents = [
+             game_overlay_server_types_1.TranslatedEventType.KEY_UP,
+@@ -59,13 +70,25 @@
+         };
+         logs_1.gameOverlayLog.debug(`------------ init Overlay Provider------------`);
+     }
+-    init() {
++    async init() {
+         try {
+             logs_1.gameOverlayLog.debug(`Overlay provider | try to require provider`);
+-            this.provider = require(paths_1.OVERLAY_MODULE_PATH);
+-            logs_1.gameOverlayLog.debug(`Overlay provider | provider required`, { provider: this.provider });
+-        }
+-        catch (error) {
++            const leagueVariables = await getLeagueEnvVariables();
++            const overlayCommand = `${leagueVariables.WINE} ${OVERLAY_PROVIDER_NAME}`;
++            process_utils_1.log(`starting overlay connector: ${overlayCommand} in dir: ${this.overlayConnectorDir}`);
++            console.log("Run exec sync thingy", child_process_1.execSync(overlayCommand, {
++                shell: true,
++                stdio: ['inherit', 'inherit', 'inherit'],
++                cwd: this.overlayConnectorDir,
++                env: {
++                    ...leagueVariables,
++                    NODE_SKIP_PLATFORM_CHECK: "1"
++                }
++            }));
++            this.provider = require("./overlay_provider_replacement");
++            //this.provider = require(paths_1.OVERLAY_MODULE_PATH);
++            logs_1.gameOverlayLog.debug(`Overlay provider | provider required`, {provider: this.provider});
++        } catch (error) {
+             logs_1.gameOverlayLog.error("Overlay provider | occurred error while trying to require overlay's provider. ", {
+                 error,
+                 path: paths_1.OVERLAY_MODULE_PATH,
+@@ -80,8 +103,7 @@
+         try {
+             logs_1.gameOverlayLog.debug(`Overlay provider | try to start provider`);
+             this.provider.start();
+-        }
+-        catch (error) {
++        } catch (error) {
+             logs_1.gameOverlayLog.error("Overlay provider | occurred error while trying to start overlay's provider. ", {
+                 error,
+                 path: paths_1.OVERLAY_MODULE_PATH,
+@@ -150,4 +172,4 @@
+     }
+ }
+ exports.BaseOverlayProvider = BaseOverlayProvider;
+-//# sourceMappingURL=base-overlay-provider.js.map
+\ No newline at end of file
++//# sourceMappingURL=base-overlay-provider.js.map
+diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js
+--- original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	1970-01-01 01:00:00.000000000 +0100
++++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-10 02:55:22.185720975 +0000
+@@ -0,0 +1,34 @@
++
++
++module.exports = {
++    start: (...args) => {
++        console.log("start", args);
++    },
++    stop: (...args) => {
++        console.log("stop", args);
++    },
++    addWindow: (...args) => {
++        console.log("console", args);
++    },
++    deleteWindow: (...args) => {
++        console.log("deleteWindow", args);
++    },
++    prepareFrameBuffer: (...args) => {
++        console.log("prepareFrameBuffer", args);
++    },
++    translateInputEvent: (...args) => {
++        console.log("translateInputEvent", args);
++    },
++    getCodeForKey: (...args) => {
++        console.log("getCodeForKey", args);
++    },
++    initMemoryScannerForLoL: (...args) => {
++        console.log("initMemoryScannerForLoL", args);
++    },
++    getMemoryScannerForLoLStatus: (...args) => {
++        console.log("getMemoryScannerForLoLStatus", args);
++    },
++    getLoLPlayerLiveData: (...args) => {
++        console.log("getLoLPlayerLiveData", args);
++    },
++};
+diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
+--- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-10 02:07:21.215828297 +0000
+@@ -226,6 +226,7 @@
+         return net_1.default.createServer(this.serverConnectionListener);
+     }
+     connectToInjectorServer(pid, clientName) {
++        console.log("Connection info", net_1, net_1.default);
+         const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
+         this.clientConnections.set(pid, connection);
+         logs_1.gameOverlayLog.debug(`Overlay server | connection to injector created, app name: ${clientName} pid: ${pid}`);
+@@ -259,4 +260,4 @@
+     }
+ }
+ exports.BaseOverlayServer = BaseOverlayServer;
+-//# sourceMappingURL=base-overlay-server.js.map
+\ No newline at end of file
++//# sourceMappingURL=base-overlay-server.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-07 22:56:04.460075371 +0000
 +++ modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-10 01:18:37.825937198 +0000
@@ -472,6 +649,24 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-ser
 -//# sourceMappingURL=win-overlay-server.js.map
 \ No newline at end of file
 +//# sourceMappingURL=win-overlay-server.js.map
+diff -uraN original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js
+--- original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-10 01:29:07.419247079 +0000
+@@ -178,6 +178,7 @@
+                 this.window.webContents.send(channel, ...args);
+             }
+             else {
++                console.log(this.window);
+                 logs_1.gameOverlayLog.error('Overlay Window | Unable send to overlay window: ', [channel]);
+             }
+         };
+@@ -277,4 +278,4 @@
+     }
+ }
+ exports.BaseOverlayWindow = BaseOverlayWindow;
+-//# sourceMappingURL=base-overlay-window.js.map
+\ No newline at end of file
++//# sourceMappingURL=base-overlay-window.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js modified/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js
 --- original/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js	2021-11-07 22:56:04.460075371 +0000
 +++ modified/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js	2021-11-10 01:23:05.269260568 +0000
@@ -609,6 +804,16 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
 -//# sourceMappingURL=gaze-reader-process.js.map
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-process.js.map
+diff -uraN original/moba-desktop/src/lol/lcu/lcu-connector/lcu-connector.js modified/moba-desktop/src/lol/lcu/lcu-connector/lcu-connector.js
+--- original/moba-desktop/src/lol/lcu/lcu-connector/lcu-connector.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/lol/lcu/lcu-connector/lcu-connector.js	2021-11-10 01:58:57.845847047 +0000
+@@ -118,4 +118,4 @@
+ }
+ exports.LcuConnector = LcuConnector;
+ LcuConnector.instance = null;
+-//# sourceMappingURL=lcu-connector.js.map
+\ No newline at end of file
++//# sourceMappingURL=lcu-injection.js.map
 diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
 --- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-07 22:56:04.456742038 +0000
 +++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-07 22:56:04.486742037 +0000
@@ -630,7 +835,7 @@ diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-imp
 +//# sourceMappingURL=in-game-items-import.js.map
 diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 --- original/moba-desktop/src/main.js	2021-11-07 22:56:04.450075372 +0000
-+++ modified/moba-desktop/src/main.js	2021-11-07 22:56:04.486742037 +0000
++++ modified/moba-desktop/src/main.js	2021-11-10 01:58:57.882513715 +0000
 @@ -1,6 +1,7 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
@@ -645,7 +850,7 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
  gotTheLock ? app_1.runApp() : electron_1.app.quit();
 -//# sourceMappingURL=main.js.map
 \ No newline at end of file
-+//# sourceMappingURL=main.js.map
++//# sourceMappingURL=injection.js.map
 +process
 +    .on('unhandledRejection', (reason, p) => {
 +        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: err});
@@ -656,6 +861,16 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 +        console.error(err, 'Uncaught Exception thrown');
 +        process.exit(1);
 +    });
+diff -uraN original/moba-desktop/src/paths.js modified/moba-desktop/src/paths.js
+--- original/moba-desktop/src/paths.js	2021-11-07 22:56:04.450075372 +0000
++++ modified/moba-desktop/src/paths.js	2021-11-10 01:35:18.415899925 +0000
+@@ -76,4 +76,4 @@
+ exports.OVERLAY_MODULE_WIN_PATH = path.join(exports.EXTRA_RESOURCES_PATH, 'overlay-module', OVERLAY_MODULE_VERSION_WIN, 'win', 'electron_overlay');
+ exports.OVERLAY_MODULE_PATH = environment_1.isOsX ? exports.OVERLAY_MODULE_MAC_PATH : exports.OVERLAY_MODULE_WIN_PATH;
+ exports.OVERLAY_MODULE_FILE_PATH = `${exports.OVERLAY_MODULE_PATH}.node`;
+-//# sourceMappingURL=paths.js.map
+\ No newline at end of file
++//# sourceMappingURL=paths.js.map
 diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop/src/utils/createLogger.js
 --- original/moba-desktop/src/utils/createLogger.js	2021-11-07 22:56:04.450075372 +0000
 +++ modified/moba-desktop/src/utils/createLogger.js	2021-11-10 01:20:47.645932363 +0000
@@ -736,6 +951,16 @@ diff -uraN original/moba-desktop/src/utils/game-overlay/game-overlay-window.js m
 -//# sourceMappingURL=game-overlay-window.js.map
 \ No newline at end of file
 +//# sourceMappingURL=game-overlay-window.js.map
+diff -uraN original/moba-desktop/src/utils/ipc-main.js modified/moba-desktop/src/utils/ipc-main.js
+--- original/moba-desktop/src/utils/ipc-main.js	2021-11-07 22:56:04.450075372 +0000
++++ modified/moba-desktop/src/utils/ipc-main.js	2021-11-10 01:58:57.875847046 +0000
+@@ -10,4 +10,4 @@
+     electron_1.ipcMain.handle(channel, listener);
+ }
+ exports.ipcMainHandle = ipcMainHandle;
+-//# sourceMappingURL=ipc-main.js.map
+\ No newline at end of file
++//# sourceMappingURL=ipc-injection.js.map
 diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
 --- original/moba-desktop/src/utils/lcu-connection.js	2021-11-07 22:56:04.450075372 +0000
 +++ modified/moba-desktop/src/utils/lcu-connection.js	2021-11-07 22:56:04.486742037 +0000
@@ -881,3 +1106,23 @@ diff -uraN original/moba-desktop/src/windows/main/main.window.js modified/moba-d
 -//# sourceMappingURL=main.window.js.map
 \ No newline at end of file
 +//# sourceMappingURL=main.window.js.map
+diff -uraN original/moba-web/src/common/api/connectors/graphql-connector.js modified/moba-web/src/common/api/connectors/graphql-connector.js
+--- original/moba-web/src/common/api/connectors/graphql-connector.js	2021-11-07 22:56:04.450075372 +0000
++++ modified/moba-web/src/common/api/connectors/graphql-connector.js	2021-11-10 01:58:57.962513711 +0000
+@@ -158,4 +158,4 @@
+     }
+ }
+ exports.GraphqlConnector = GraphqlConnector;
+-//# sourceMappingURL=graphql-connector.js.map
+\ No newline at end of file
++//# sourceMappingURL=graphql-injection.js.map
+diff -uraN original/moba-web/src/common/api/connectors/http-connector.js modified/moba-web/src/common/api/connectors/http-connector.js
+--- original/moba-web/src/common/api/connectors/http-connector.js	2021-11-07 22:56:04.450075372 +0000
++++ modified/moba-web/src/common/api/connectors/http-connector.js	2021-11-10 01:58:57.955847045 +0000
+@@ -110,4 +110,4 @@
+     }
+ }
+ exports.HttpConnector = HttpConnector;
+-//# sourceMappingURL=http-connector.js.map
+\ No newline at end of file
++//# sourceMappingURL=http-injection.js.map
