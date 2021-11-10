@@ -25,7 +25,8 @@
     "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && yarn dist",
     "snap-build": "yarn deep-clean && snapcraft build",
     "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload",
-    "compile-injection-connector": "pkg src/injection-connector/main.js --target=windows --output=app/injection-connector"
+    "compile-injection-connector": "pkg src/injection-connector/injection.js --target=windows --output=app/injection-connector",
+    "compile-provider-connector": "pkg src/overlay-provider/provider-connector.js --target=windows --output=app/overlay-provider"
   },
   "dependencies": {
     "7zip-bin": "5.1.1",
