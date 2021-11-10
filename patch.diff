@@ -202,7 +202,7 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-09 02:45:08.951318126 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 01:06:43.862630463 +0000
 @@ -0,0 +1,161 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -458,6 +458,38 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/win-overlay-i
 -//# sourceMappingURL=win-overlay-injector.js.map
 \ No newline at end of file
 +//# sourceMappingURL=win-overlay-injector.js.map
+diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js
+--- original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-10 01:18:37.825937198 +0000
+@@ -7,7 +7,8 @@
+ class WinOverlayServer extends base_overlay_server_1.BaseOverlayServer {
+     constructor(overlayProvider) {
+         super(CLIENT_PATH, SERVER_PATH, overlayProvider);
++        console.log("Overlay server", CLIENT_PATH, SERVER_PATH);
+     }
+ }
+ exports.WinOverlayServer = WinOverlayServer;
+-//# sourceMappingURL=win-overlay-server.js.map
+\ No newline at end of file
++//# sourceMappingURL=win-overlay-server.js.map
+diff -uraN original/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js modified/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js
+--- original/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js	2021-11-07 22:56:04.460075371 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-window/lol-overlay-window.js	2021-11-10 01:23:05.269260568 +0000
+@@ -24,6 +24,7 @@
+ class LolOverlayWindow extends base_overlay_window_1.BaseOverlayWindow {
+     constructor(params) {
+         super(game_overlay_types_1.OverlayWindowId.LOL, params);
++        console.log("Creating lol overlay window");
+         this.toggleButtonIsDown = false;
+         this.keysState = {};
+         this.changeHotkey = (oldKey, _newKey) => {
+@@ -121,4 +122,4 @@
+     }
+ }
+ exports.LolOverlayWindow = LolOverlayWindow;
+-//# sourceMappingURL=lol-overlay-window.js.map
+\ No newline at end of file
++//# sourceMappingURL=lol-overlay-window.js.map
 diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
 --- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-07 22:56:04.460075371 +0000
 +++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-07 22:56:04.486742037 +0000
@@ -626,7 +658,16 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 +    });
 diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop/src/utils/createLogger.js
 --- original/moba-desktop/src/utils/createLogger.js	2021-11-07 22:56:04.450075372 +0000
-+++ modified/moba-desktop/src/utils/createLogger.js	2021-11-07 22:56:04.486742037 +0000
++++ modified/moba-desktop/src/utils/createLogger.js	2021-11-10 01:20:47.645932363 +0000
+@@ -66,7 +66,7 @@
+         }));
+     }
+     const isConsoleTransportAllowed = environment_1.IS_ELECTRON_DEV || environment_1.IS_JEST_TESTING;
+-    if (isConsoleTransportAllowed) {
++    if (isConsoleTransportAllowed || environment_1.isLinux) {
+         transports.push(new winston.transports.Console({ format: consoleLogsFormat }));
+     }
+     return winston.createLogger({
 @@ -76,4 +76,4 @@
      });
  }
@@ -732,7 +773,7 @@ diff -uraN original/moba-desktop/src/utils/lol-client.js modified/moba-desktop/s
 +//# sourceMappingURL=lol-client.js.map
 diff -uraN original/moba-desktop/src/utils/process.utils.js modified/moba-desktop/src/utils/process.utils.js
 --- original/moba-desktop/src/utils/process.utils.js	2021-11-07 22:56:04.453408705 +0000
-+++ modified/moba-desktop/src/utils/process.utils.js	2021-11-07 22:56:04.486742037 +0000
++++ modified/moba-desktop/src/utils/process.utils.js	2021-11-10 01:28:19.985915513 +0000
 @@ -6,6 +6,7 @@
  const environment_1 = require("./environment");
  exports.logPrefix = 'Processes utils |';

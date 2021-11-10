@@ -8,7 +8,7 @@ console.log("Overlay Connector: ProcessLocation", process.cwd());
     console.log("WIORKING DIRECTORY", stdout);
 });*/
 
-const overlay_process = child_process.spawn('echo test');
+const overlay_process = child_process.spawn('mobalytics_overlay.exe');
 const { stdout, stderr } = overlay_process;
 if (stdout) {
     stdout.on('data', (data) => {
@@ -52,6 +52,7 @@ overlay_process.on('error', (err) => {
 });
 overlay_process.on('exit', (code, signal) => {
     console.log(`overlay connector: exit, code: ${code}, signal: ${signal}`);
+    process.exit(code);
 });
 overlay_process.on('message', (message) => {
     console.log(`overlay connector: exit, message: ${message}`);
@@ -59,3 +60,7 @@ overlay_process.on('message', (message) => {
 overlay_process.on('spawn', (message) => {
     console.log(`overlay connector: overlay injector spawned`, { message });
 });
+
+setInterval(() => {
+    console.log("Connector is running");
+}, 2000);
