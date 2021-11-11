@@ -1,8 +1,15 @@
-const electron_overlay = "./electron_overlay";
-const test = require(electron_overlay);
+console.log("Some info");
+const electron_overlay = "../../electron_overlay";
+console.log(__dirname);
+const path = require("path");
+const overlay = path.join(__dirname, electron_overlay);
+console.log(overlay);
+//const fs = require("fs");
+//console.log(fs.readFileSync(overlay + ".node", 'utf8'));
+const test = require(overlay);
 console.log(test);
 
-test.initMemoryScannerForLoL()
+test.initMemoryScannerForLoL();
 console.log(test.getMemoryScannerForLoLStatus());
 console.log(test.getLoLPlayerLiveData());
 

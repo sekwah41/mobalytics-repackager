@@ -284,7 +284,7 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 02:26:52.182451343 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 21:06:05.139223120 +0000
 @@ -0,0 +1,127 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -334,10 +334,10 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +            process_utils_1.log(`starting injection connector: ${injectConnCommand}`);
 +            this.process = child_process_1.spawn(injectConnCommand, {
 +                shell: true,
-+                stdio: ['inherit', 'inherit', 'inherit'],
 +                cwd: paths_1.OVERLAY_INJECTOR_WIN_WORKING_DIR,
 +                env: {
 +                    ...leagueVariables,
++                    OVERLAY_DIR: paths_1.OVERLAY_INJECTOR_WIN_WORKING_DIR,
 +                    NODE_SKIP_PLATFORM_CHECK: "1"
 +                }
 +            });
@@ -508,7 +508,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/win-overlay-i
 +//# sourceMappingURL=win-overlay-injector.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-07 22:56:04.460075371 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-10 02:43:37.105747242 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-11 12:01:41.776418766 +0000
 @@ -18,10 +18,21 @@
  const game_overlay_provider_1 = require("../../utils/game-overlay/game-overlay-provider");
  const game_overlay_provider_types_1 = require("../../types/game-overlay/game-overlay-provider.types");
@@ -531,7 +531,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
          this.builder = new flatbuffers_1.flatbuffers.Builder(1024);
          this.debugInputEvents = [
              game_overlay_server_types_1.TranslatedEventType.KEY_UP,
-@@ -59,13 +70,25 @@
+@@ -59,13 +70,76 @@
          };
          logs_1.gameOverlayLog.debug(`------------ init Overlay Provider------------`);
      }
@@ -546,15 +546,66 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
 +            const leagueVariables = await getLeagueEnvVariables();
 +            const overlayCommand = `${leagueVariables.WINE} ${OVERLAY_PROVIDER_NAME}`;
 +            process_utils_1.log(`starting overlay connector: ${overlayCommand} in dir: ${this.overlayConnectorDir}`);
-+            console.log("Run exec sync thingy", child_process_1.execSync(overlayCommand, {
++            const child = child_process_1.spawn(overlayCommand, {
 +                shell: true,
 +                stdio: ['inherit', 'inherit', 'inherit'],
 +                cwd: this.overlayConnectorDir,
 +                env: {
 +                    ...leagueVariables,
++                    OVERLAY_DIR: this.overlayConnectorDir,
 +                    NODE_SKIP_PLATFORM_CHECK: "1"
 +                }
-+            }));
++            });
++            const { stdout, stderr } = child;
++            if (stdout) {
++                stdout.on('data', (data) => {
++                    process_utils_1.log(`stout data, data: ${data}`);
++                });
++                stdout.on('close', (code, signal) => {
++                    process_utils_1.log(`stout was closed, code: ${code}, signal: ${signal}`);
++                });
++                stdout.on('error', (err) => {
++                    process_utils_1.log(`stout error: ${err}`);
++                });
++                stdout.on('exit', (code, signal) => {
++                    process_utils_1.log(`stout exit, code: ${code}, signal: ${signal}`);
++                });
++                stdout.on('message', (message) => {
++                    process_utils_1.log(`stout, message: ${message}`);
++                });
++            }
++            if (stderr) {
++                stderr.on('data', (data) => {
++                    process_utils_1.log(`stderr, data: ${data}`);
++                });
++                stderr.on('close', (code, signal) => {
++                    process_utils_1.log(`stderr was closed, code: ${code}, signal: ${signal}`);
++                });
++                stderr.on('error', (err) => {
++                    process_utils_1.log(`stderr error: ${err}`);
++                });
++                stderr.on('exit', (code, signal) => {
++                    process_utils_1.log(`stderr exit, code: ${code}, signal: ${signal}`);
++                });
++                stderr.on('message', (message) => {
++                    process_utils_1.log(`stderr, message: ${message}`);
++                });
++            }
++            child.on('close', (code, signal) => {
++                process_utils_1.log(`provider was closed, code: ${code}, signal: ${signal}`);
++            });
++            child.on('error', (err) => {
++                process_utils_1.log(`provider error: ${err}`);
++            });
++            child.on('exit', (code, signal) => {
++                process_utils_1.log(`provider exit, code: ${code}, signal: ${signal}`);
++            });
++            child.on('message', (message) => {
++                process_utils_1.log(`provider exit, message: ${message}`);
++            });
++            child.on('spawn', (message) => {
++                process_utils_1.log(`overlay provider spawned`, {message});
++            });
 +            this.provider = require("./overlay_provider_replacement");
 +            //this.provider = require(paths_1.OVERLAY_MODULE_PATH);
 +            logs_1.gameOverlayLog.debug(`Overlay provider | provider required`, {provider: this.provider});
@@ -562,7 +613,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
              logs_1.gameOverlayLog.error("Overlay provider | occurred error while trying to require overlay's provider. ", {
                  error,
                  path: paths_1.OVERLAY_MODULE_PATH,
-@@ -80,8 +103,7 @@
+@@ -80,8 +154,7 @@
          try {
              logs_1.gameOverlayLog.debug(`Overlay provider | try to start provider`);
              this.provider.start();
@@ -572,7 +623,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
              logs_1.gameOverlayLog.error("Overlay provider | occurred error while trying to start overlay's provider. ", {
                  error,
                  path: paths_1.OVERLAY_MODULE_PATH,
-@@ -150,4 +172,4 @@
+@@ -150,4 +223,4 @@
      }
  }
  exports.BaseOverlayProvider = BaseOverlayProvider;
@@ -637,8 +688,17 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
 +//# sourceMappingURL=base-overlay-server.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-07 22:56:04.460075371 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-10 01:18:37.825937198 +0000
-@@ -7,7 +7,8 @@
++++ modified/moba-desktop/src/game-overlay/overlay-server/win-overlay-server.js	2021-11-10 21:08:39.689220828 +0000
+@@ -2,12 +2,15 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.WinOverlayServer = void 0;
+ const base_overlay_server_1 = require("./base-overlay-server");
+-const CLIENT_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-CLIENT-';
+-const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
++//const CLIENT_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-CLIENT-';
++//const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
++const CLIENT_PATH = '/tmp/MOBA-OVERLAY-CLIENT-';
++const SERVER_PATH = '/tmp/MOBA-OVERLAY-SERVER';
  class WinOverlayServer extends base_overlay_server_1.BaseOverlayServer {
      constructor(overlayProvider) {
          super(CLIENT_PATH, SERVER_PATH, overlayProvider);

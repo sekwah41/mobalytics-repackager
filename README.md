@@ -16,3 +16,5 @@ To try snapcraft building locally try `snapcraft build` rather than using electr
 
 Due to some weirdness with the snapcraft that I dont really want to figure out(kept using wrong node version and yarn version)
 
+When using nexe to package the application in a version not prebuild use --verbose to make sure you know its actually progressing. (it can take a while)
+
