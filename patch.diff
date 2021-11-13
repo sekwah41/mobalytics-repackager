@@ -284,8 +284,8 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-10 21:06:05.139223120 +0000
-@@ -0,0 +1,127 @@
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-13 02:46:28.483040155 +0000
+@@ -0,0 +1,128 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -338,7 +338,8 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +                env: {
 +                    ...leagueVariables,
 +                    OVERLAY_DIR: paths_1.OVERLAY_INJECTOR_WIN_WORKING_DIR,
-+                    NODE_SKIP_PLATFORM_CHECK: "1"
++                    NODE_SKIP_PLATFORM_CHECK: "1",
++                    WINEDEBUG: "-all",
 +                }
 +            });
 +            this.process.on('close', (code, signal) => {
@@ -508,7 +509,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/win-overlay-i
 +//# sourceMappingURL=win-overlay-injector.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-07 22:56:04.460075371 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-11 12:01:41.776418766 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-13 03:24:43.056288013 +0000
 @@ -18,10 +18,21 @@
  const game_overlay_provider_1 = require("../../utils/game-overlay/game-overlay-provider");
  const game_overlay_provider_types_1 = require("../../types/game-overlay/game-overlay-provider.types");

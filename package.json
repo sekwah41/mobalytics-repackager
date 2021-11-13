@@ -25,8 +25,8 @@
     "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && yarn dist",
     "snap-build": "yarn deep-clean && snapcraft build",
     "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload",
-    "compile-injection-connector": "nexe src/injection-connector/injection.js -t win32-x64-14.15.3 --build --verbose -o app/injection-connector",
-    "compile-provider-connector": "nexe src/overlay-provider/provider-connector.js -t win32-x64-14.15.3 --build --verbose -o app/overlay-provider"
+    "compile-injection-connector": "pkg src/injection-connector/injection.js --target=node14-windows --output=app/injection-connector",
+    "compile-provider-connector": "pkg src/overlay-provider/provider-connector.js --target=node14-windows --output=app/overlay-provider"
   },
   "dependencies": {
     "7zip-bin": "^5.1.1",
@@ -39,6 +39,6 @@
   "devDependencies": {
     "electron": "14.2.0",
     "electron-builder": "22.13.1",
-    "nexe": "4.0.0-beta.19"
+    "pkg": "5.4.1"
   }
 }
