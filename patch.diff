@@ -557,8 +557,8 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
 +//# sourceMappingURL=base-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-13 22:36:15.318053228 +0000
-@@ -0,0 +1,114 @@
++++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-13 22:57:35.461367586 +0000
+@@ -0,0 +1,129 @@
 +const fetch = require('node-fetch');
 +const logs_1 = require("../../utils/logs");
 +const {getLeagueEnvVariables} = require("../league-helper");
@@ -574,10 +574,8 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +    return value.default();
 +}
 +
-+let providerPort;
-+
-+(async function setup() {
-+    providerPort = await getPort();
++let providerPort = (async function setup() {
++    const hostPort = await getPort();
 +
 +    const OVERLAY_PROVIDER_NAME = path.join("overlay-provider.exe");
 +    const overlayConnectorDir = path.join(paths_1.OVERLAY_MODULE_WIN_PATH, "../");
@@ -596,7 +594,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +            ...leagueVariables,
 +            OVERLAY_DIR: overlayConnectorDir,
 +            NODE_SKIP_PLATFORM_CHECK: "1",
-+            PORT: providerPort,
++            PORT: hostPort,
 +        }
 +    });
 +    child.on('close', (code, signal) => {
@@ -615,62 +613,79 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +        process_utils_1.log(`overlay provider spawned`, {message});
 +    });
 +
++    await new Promise((resolve) => {
++        setTimeout(() => {
++            // TODO more reliable way to check if the service is running.
++            resolve();
++        }, 5000);
++    });
++
++    return hostPort;
 +})();
 +
 +
 +async function callEndpoint(path, ...args) {
 +    // TODO queue requests until provider is ready
-+    if(providerPort)
-+    console.log("Calling", `http://localhost:${providerPort}/${path}`, "with", args)
-+    const response = await fetch(`http://localhost:${providerPort}/${path}`, {
-+        method: "POST",
-+        headers: {
-+            "Content-Type": "application/json"
-+        },
-+        body: JSON.stringify(args)
-+    });
-+    return response.json();
++    const hostPort = await providerPort;
++    const urlPath = `http://localhost:${hostPort}/${path}`;
++    console.log("Calling", urlPath, "with", args);
++    try {
++        const response = await fetch(urlPath, {
++            method: "POST",
++            headers: {
++                "Content-Type": "application/json"
++            },
++            body: JSON.stringify({
++                args
++            })
++        });
++        return response.json();
++    } catch(e) {
++        console.log("Error connecting", e);
++        return null;
++    }
++
 +}
 +
-+console.log("Try to get functions");
++/*console.log("Try to get functions");
 +setInterval(async () => {
 +    try {
-+        console.log("Return info", await callEndpoint("functions"));
++        await callEndpoint("getLoLPlayerLiveData");
 +    } catch (e) {
 +        console.log("problem", e);
 +    }
-+}, 4000);
++}, 4000);*/
 +
 +module.exports = {
-+    start: (...args) => {
-+        console.log("start", args);
++    start: async (...args) => {
++        await callEndpoint("start", args);
 +    },
-+    stop: (...args) => {
-+        console.log("stop", args);
++    stop: async (...args) => {
++        await callEndpoint("stop", args);
 +    },
-+    addWindow: (...args) => {
-+        console.log("console", args);
++    addWindow: async (...args) => {
++        await callEndpoint("console", args);
 +    },
-+    deleteWindow: (...args) => {
-+        console.log("deleteWindow", args);
++    deleteWindow: async (...args) => {
++        await callEndpoint("deleteWindow", args);
 +    },
-+    prepareFrameBuffer: (...args) => {
-+        console.log("prepareFrameBuffer", args);
++    prepareFrameBuffer: async (...args) => {
++        await callEndpoint("prepareFrameBuffer", args);
 +    },
-+    translateInputEvent: (...args) => {
-+        console.log("translateInputEvent", args);
++    translateInputEvent: async (...args) => {
++        await callEndpoint("translateInputEvent", args);
 +    },
-+    getCodeForKey: (...args) => {
-+        console.log("getCodeForKey", args);
++    getCodeForKey: async (...args) => {
++        await callEndpoint("getCodeForKey", args);
 +    },
-+    initMemoryScannerForLoL: (...args) => {
-+        console.log("initMemoryScannerForLoL", args);
++    initMemoryScannerForLoL: async (...args) => {
++        await callEndpoint("initMemoryScannerForLoL", args);
 +    },
-+    getMemoryScannerForLoLStatus: (...args) => {
-+        console.log("getMemoryScannerForLoLStatus", args);
++    getMemoryScannerForLoLStatus: async (...args) => {
++        await callEndpoint("getMemoryScannerForLoLStatus", args);
 +    },
-+    getLoLPlayerLiveData: (...args) => {
-+        console.log("getLoLPlayerLiveData", args);
++    getLoLPlayerLiveData: async (...args) => {
++        await callEndpoint("getLoLPlayerLiveData", args);
 +    },
 +};
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js

@@ -1,7 +1,6 @@
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
-const util = require('util')
 const express = require("express");
 const bodyParser = require('body-parser');
 
@@ -49,9 +48,9 @@ console.log("Provider", provider);
 for(let value in provider) {
     console.log("Setting up path", value);
     app.post(`/${value}`, (req, res) => {
-        console.log("Provider: Received request", req.body);
-        let result = provider[value](...(req?.body || []));
-        console.log("Provider: Sending response", result);
+        console.log(`Provider: ${value} Received request`, req.body);
+        let result = provider[value](...(req?.body?.args || [])) || {};
+        console.log(`Provider: ${value} Sending response`, result);
         res.type('json').send(result);
     });
 }
