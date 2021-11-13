@@ -44,13 +44,15 @@ app.post("/functions", (req, res) => {
     res.type('json').send({functions: Object.keys(provider)});
 });
 
+let started = false;
+
 console.log("Provider", provider);
 for(let value in provider) {
     console.log("Setting up path", value);
     app.post(`/${value}`, (req, res) => {
-        console.log(`Provider: ${value} Received request`, req.body);
+        //console.log(`Provider: ${value} Received request`, req.body);
         let result = provider[value](...(req?.body?.args || [])) || {};
-        console.log(`Provider: ${value} Sending response`, result);
+        //console.log(`Provider: ${value} Sending response`, result);
         res.type('json').send(result);
     });
 }
