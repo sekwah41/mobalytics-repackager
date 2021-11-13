@@ -20,6 +20,7 @@ jobs:
       - name: Setup Project
         run: |
           yarn install --immutable
+          yarn setup
       - name: Build Electron App
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
