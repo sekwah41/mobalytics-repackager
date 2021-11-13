@@ -1,6 +1,9 @@
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
+const util = require('util')
+const express = require("express");
+const bodyParser = require('body-parser');
 
 console.log("Provider: Starting overlay")
 console.log("Provider: ProcessLocation", process.cwd());
@@ -19,13 +22,45 @@ if(fs.existsSync(temp_provider)) {
 } else {
     fs.copyFileSync(overlay_loc, temp_provider);
 }
-const test = require(temp_provider);
+const provider = require(temp_provider);
 
-test.initMemoryScannerForLoL();
+let app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+let server = app.listen((process.env.PORT || 54823), () => {
+
+    let host = server.address().address;
+    let port = server.address().port;
+
+    console.log('Provider Connector hosted on http://%s:%s', host, port);
+
+});
+
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+});
+// Just to match the same structure as the other calls
+app.post("/functions", (req, res) => {
+    res.type('json').send({functions: Object.keys(provider)});
+});
+
+console.log("Provider", provider);
+for(let value in provider) {
+    console.log("Setting up path", value);
+    app.post(`/${value}`, (req, res) => {
+        console.log("Provider: Received request", req.body);
+        let result = provider[value](...(req?.body || []));
+        console.log("Provider: Sending response", result);
+        res.type('json').send(result);
+    });
+}
+
+/*test.initMemoryScannerForLoL();
 setInterval(() => {
     console.log(test.getMemoryScannerForLoLStatus());
     console.log(test.getLoLPlayerLiveData());
-}, 1000);
+}, 1000);*/
 
 // TODO write a connector which also returns what functions are available for construction on the other side
 // TODO create a connection though IPC or something which allows for direct calls (possibly with promise returns? i dunno)
