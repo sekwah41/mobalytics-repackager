@@ -18,6 +18,8 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('package.json') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Setup Project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn install --immutable
           yarn setup
