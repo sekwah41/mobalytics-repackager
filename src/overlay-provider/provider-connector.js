@@ -50,10 +50,8 @@ console.log("Provider", provider);
 for(let value in provider) {
     console.log("Setting up path", value);
     app.post(`/${value}`, (req, res) => {
-        //console.log(`Provider: ${value} Received request`, req.body);
         let result = provider[value](...(req?.body?.args || [])) || {};
-        //console.log(`Provider: ${value} Sending response`, result);
-        res.type('json').send(result);
+        res.type('json').send(result || {result: "empty"});
     });
 }
 

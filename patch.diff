@@ -284,8 +284,8 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-13 22:01:44.958083918 +0000
-@@ -0,0 +1,128 @@
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-14 02:10:35.864529916 +0000
+@@ -0,0 +1,129 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -334,6 +334,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +            process_utils_1.log(`starting injection connector: ${injectConnCommand}`);
 +            this.process = child_process_1.spawn(injectConnCommand, {
 +                shell: true,
++                stdio: ['inherit', 'inherit', 'inherit'],
 +                cwd: paths_1.OVERLAY_INJECTOR_WIN_WORKING_DIR,
 +                env: {
 +                    ...leagueVariables,
@@ -557,8 +558,8 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
 +//# sourceMappingURL=base-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-13 22:57:35.461367586 +0000
-@@ -0,0 +1,129 @@
++++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-14 02:07:54.094532316 +0000
+@@ -0,0 +1,134 @@
 +const fetch = require('node-fetch');
 +const logs_1 = require("../../utils/logs");
 +const {getLeagueEnvVariables} = require("../league-helper");
@@ -639,7 +640,12 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +                args
 +            })
 +        });
-+        return response.json();
++        const json = await response.json();
++        if(json.result === "empty") {
++            return undefined;
++        } else {
++            return json;
++        }
 +    } catch(e) {
 +        console.log("Error connecting", e);
 +        return null;
@@ -658,36 +664,58 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +
 +module.exports = {
 +    start: async (...args) => {
-+        await callEndpoint("start", args);
++        return await callEndpoint("start", args);
 +    },
 +    stop: async (...args) => {
-+        await callEndpoint("stop", args);
++        return await callEndpoint("stop", args);
 +    },
 +    addWindow: async (...args) => {
-+        await callEndpoint("console", args);
++        return await callEndpoint("console", args);
 +    },
 +    deleteWindow: async (...args) => {
-+        await callEndpoint("deleteWindow", args);
++        return await callEndpoint("deleteWindow", args);
 +    },
 +    prepareFrameBuffer: async (...args) => {
-+        await callEndpoint("prepareFrameBuffer", args);
++        return await callEndpoint("prepareFrameBuffer", args);
 +    },
 +    translateInputEvent: async (...args) => {
-+        await callEndpoint("translateInputEvent", args);
++        return await callEndpoint("translateInputEvent", args);
 +    },
 +    getCodeForKey: async (...args) => {
-+        await callEndpoint("getCodeForKey", args);
++        return await callEndpoint("getCodeForKey", args);
 +    },
 +    initMemoryScannerForLoL: async (...args) => {
-+        await callEndpoint("initMemoryScannerForLoL", args);
++        return await callEndpoint("initMemoryScannerForLoL", args);
 +    },
 +    getMemoryScannerForLoLStatus: async (...args) => {
-+        await callEndpoint("getMemoryScannerForLoLStatus", args);
++        return await callEndpoint("getMemoryScannerForLoLStatus", args);
 +    },
 +    getLoLPlayerLiveData: async (...args) => {
-+        await callEndpoint("getLoLPlayerLiveData", args);
++        return await callEndpoint("getLoLPlayerLiveData", args);
 +    },
 +};
+diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-provider.js modified/moba-desktop/src/game-overlay/overlay-provider/win-overlay-provider.js
+--- original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-provider.js	2021-11-13 22:01:44.938083919 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/win-overlay-provider.js	2021-11-14 01:54:59.354543801 +0000
+@@ -5,9 +5,9 @@
+ class WinOverlayProvider extends base_overlay_provider_1.BaseOverlayProvider {
+     constructor() {
+         super();
+-        this.initLolMemoryScanner = () => {
++        this.initLolMemoryScanner = async () => {
+             var _a;
+-            return (_a = this.provider) === null || _a === void 0 ? void 0 : _a.initMemoryScannerForLoL();
++            return (_a = this.provider) === null || _a === void 0 ? void 0 : await _a.initMemoryScannerForLoL();
+         };
+         this.getLolMemoryScannerInfo = () => {
+             var _a;
+@@ -28,4 +28,4 @@
+     }
+     return WinOverlayProvider.instance;
+ };
+-//# sourceMappingURL=win-overlay-provider.js.map
+\ No newline at end of file
++//# sourceMappingURL=win-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-13 22:01:44.938083919 +0000
 +++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-13 22:01:44.958083918 +0000
@@ -894,6 +922,55 @@ diff -uraN original/moba-desktop/src/lol/lcu/lcu-connector/lcu-connector.js modi
 -//# sourceMappingURL=lcu-connector.js.map
 \ No newline at end of file
 +//# sourceMappingURL=lcu-injection.js.map
+diff -uraN original/moba-desktop/src/lol/lol-internal-data/lol-memory-scanner.js modified/moba-desktop/src/lol/lol-internal-data/lol-memory-scanner.js
+--- original/moba-desktop/src/lol/lol-internal-data/lol-memory-scanner.js	2021-11-13 22:01:44.934750584 +0000
++++ modified/moba-desktop/src/lol/lol-internal-data/lol-memory-scanner.js	2021-11-14 01:56:59.951208677 +0000
+@@ -21,19 +21,18 @@
+             }
+             return this.scheduler;
+         };
+-        this.fetch = (nextCallback) => {
++        this.fetch = async (nextCallback) => {
+             if (this.initialized && this.provider) {
+                 const scannerInfo = this.provider.getLolMemoryScannerInfo();
+                 const playerData = this.provider.getLolMemoryScannerPlayerData();
+-                logs_1.lolOverlayDataLog.debug('Lol game overlay memory scanner | fetch', { scannerInfo, playerData });
++                logs_1.lolOverlayDataLog.debug('Lol game overlay memory scanner | fetch', {scannerInfo, playerData});
+                 if (scannerInfo && !scannerInfo.gameFound) {
+-                    this.init();
++                    await this.init();
+                 }
+                 if (scannerInfo && scannerInfo.gameFound && !scannerInfo.searchingInProgress) {
+                     this.emit(game_overlay_types_1.MemoryScannerEvent.DATA, playerData);
+                 }
+-            }
+-            else {
++            } else {
+                 logs_1.lolOverlayDataLog.warn(`Lol game overlay memory scanner  | can't start, memory scanner is not initialized`);
+             }
+             nextCallback();
+@@ -42,12 +41,12 @@
+         this.isInitialized = () => {
+             return this.initialized;
+         };
+-        this.init = () => {
++        this.init = async () => {
+             var _a;
+             if (environment_1.isOsX)
+                 return;
+             logs_1.lolOverlayDataLog.debug('Lol game overlay memory scanner | initialization');
+-            (_a = this.provider) === null || _a === void 0 ? void 0 : _a.initLolMemoryScanner();
++            (_a = this.provider) === null || _a === void 0 ? void 0 : await _a.initLolMemoryScanner();
+             this.initialized = true;
+         };
+         this.reset = () => {
+@@ -93,4 +92,4 @@
+ }
+ exports.LolMemoryScanner = LolMemoryScanner;
+ LolMemoryScanner.instance = null;
+-//# sourceMappingURL=lol-memory-scanner.js.map
+\ No newline at end of file
++//# sourceMappingURL=lol-memory-scanner.js.map
 diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
 --- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-13 22:01:44.934750584 +0000
 +++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-13 22:01:44.961417251 +0000
