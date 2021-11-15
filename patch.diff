@@ -642,7 +642,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
 +//# sourceMappingURL=base-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-15 02:33:40.850904860 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-15 03:10:02.007490274 +0000
 @@ -0,0 +1,128 @@
 +const fetch = require('node-fetch');
 +const logs_1 = require("../../utils/logs");
@@ -748,7 +748,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +        return await callEndpoint("stop", args);
 +    },
 +    addWindow: async (...args) => {
-+        return await callEndpoint("console", args);
++        return await callEndpoint("addWindow", args);
 +    },
 +    deleteWindow: async (...args) => {
 +        return await callEndpoint("deleteWindow", args);
