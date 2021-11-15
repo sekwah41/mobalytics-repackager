@@ -22,7 +22,7 @@ const moba_server_proxy = net.createServer((socket) => {
         console.log("Overlay server connector proxy", 'client disconnected');
     });
     socket.on('data', (payload) => {
-        console.log("Overlay server connector proxy", payload, this.processEvent);
+        console.log("Overlay server connector proxy", payload);
     });
     socket.on('connect', () => {
         console.log('Overlay server connector proxy | socket connected');
@@ -38,15 +38,16 @@ const moba_server_proxy = net.createServer((socket) => {
 
 const moba_server = net.createServer((socket) => {
     // 'connection' listener.
-    console.log("Overlay server connector", 'client connected to server');
+    console.log("Overlay server connector | client connected to server");
     socket.on('end', () => {
-        console.log("Overlay server connector", 'client disconnected');
+        removeFromArray(connections, socket);
+        console.log("Overlay server connector | client disconnected");
     });
     socket.on('data', (payload) => {
         connections.forEach(connection => {
             connection.write(payload);
-        })
-        console.log("Overlay server connector", payload, this.processEvent);
+        });
+        console.log("Overlay server connector", payload, connections.length);
     });
     socket.on('connect', () => {
         console.log('Overlay server connector | socket connected');
@@ -60,8 +61,11 @@ const moba_server = net.createServer((socket) => {
 
 });
 
+moba_server_proxy.on('error', (err) => {
+    console.log('Overlay server connector proxy | error: ', { err });
+});
 moba_server.on('error', (err) => {
-    throw err;
+    console.log('Overlay server connector | error: ', { err });
 });
 console.log("Overlay server connector | Setting up server");
 moba_server.listen({

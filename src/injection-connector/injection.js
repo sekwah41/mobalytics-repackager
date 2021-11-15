@@ -57,7 +57,11 @@ overlay_process.on('error', (err) => {
 });
 overlay_process.on('exit', (code, signal) => {
     console.log(`overlay connector: exit, code: ${code}, signal: ${signal}`);
-    process.exit(code);
+    if(code !== 0) {
+        process.exit(code);
+    } else {
+        console.log("Injection success");
+    }
 });
 overlay_process.on('message', (message) => {
     console.log(`overlay connector: exit, message: ${message}`);

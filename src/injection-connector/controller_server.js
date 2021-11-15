@@ -22,7 +22,7 @@ const server = net.createServer((socket) => {
 });
 
 server.on('error', (err) => {
-    throw err;
+    console.log('Overlay server controller | error: ', { err });
 });
 console.log("Overlay server controller | Setting up Controller");
 server.listen({
