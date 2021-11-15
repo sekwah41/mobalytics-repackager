@@ -21,6 +21,7 @@
     "deep-clean": "yarn clean && rm -rf node_modules",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
     "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch",
+    "ci-build-setup": "yarn clean && yarn extract && yarn apply-patch",
     "snap-build": "yarn deep-clean && snapcraft build",
     "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload",
     "compile-injection-connector": "pkg src/injection-connector/injection.js --target=node16-windows --output=app/injection-connector",
