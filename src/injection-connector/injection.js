@@ -8,6 +8,11 @@ console.log("Overlay Connector: ProcessLocation", process.cwd());
     console.log("WIORKING DIRECTORY", stdout);
 });*/
 
+// Uses the PID at the end of the string
+
+// TODO need to make a thing which will check the PID's and other stuff and make a connector on the side which spawns this process.
+const moba_server = require("./moba_server");
+
 const overlay_process = child_process.spawn('mobalytics_overlay.exe');
 const { stdout, stderr } = overlay_process;
 if (stdout) {
