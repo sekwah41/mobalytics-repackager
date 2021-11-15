@@ -321,8 +321,8 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-15 02:48:13.780872342 +0000
-@@ -0,0 +1,152 @@
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-15 02:58:35.317515854 +0000
+@@ -0,0 +1,176 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -344,16 +344,40 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +
 +function setupInjectionConnector(port) {
 +    try {
-+        console.log("Connector controller | Creating connection on port: ", port);
-+        const connection = net_1.default.createConnection({ port }, () => {
++        console.log("Connector controller | Creating connection on port: ", port.CONTROLLER);
++        const connection = net_1.default.createConnection({ port: port.CONTROLLER }, () => {
 +            console.log("Connector controller | Connected to controller");
-+            connection.write('Test!\r\n');
 +        });
 +        connection.on('data', (data) => {
 +            console.log(`Connector controller | ${data}`);
 +        });
 +        connection.on('end', () => {
 +            console.log('Connector controller | disconnected from server');
++        });
++        connection.on('error', (err) =>{
++            console.log('Connector controller | error', err);
++        });
++    } catch (e) {
++        console.log("Problems", e);
++    }
++
++    try {
++        console.log("Overlay injection connector | Connecting to port: ", port.SERVER);
++        const server_connection = net_1.default.createConnection({ port: port.SERVER }, () => {
++            console.log("Connector server proxy | Connected to server_port");
++        });
++        const server_connection_unix = net_1.default.createConnection({ path: '/tmp/MOBA-OVERLAY-SERVER' }, () => {
++            console.log("Connector server proxy | Connected to server_unix");
++        });
++        server_connection.on('data', (data) => {
++            server_connection_unix.write(data);
++        });
++        server_connection.on('end', () => {
++            server_connection_unix.end();
++            console.log('Connector server proxy | disconnected from server');
++        });
++        server_connection.on('error', (err) =>{
++            console.log('Connector server proxy | error', err);
 +        });
 +    } catch (e) {
 +        console.log("Problems", e);
@@ -417,11 +441,11 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +            this.process.on('spawn', (message) => {
 +                process_utils_1.log(`overlay connector injector spawned`, {message});
 +            });
-+            setupInjectionConnector(ports.CONTROLLER);
 +            promise_with_retry_1.promiseWithRetry(() => process_utils_1.checkIsProcessRunning(paths_1.OVERLAY_INJECTOR_FILE_NAME, paths_1.OVERLAY_INJECTOR_WIN_PROGRAM_GREP_STR), 500, result => !!result)
 +                .then(isRunning => {
 +                    if (isRunning) {
 +                        process_utils_1.log(`Overlay injector successfully started`);
++                        setupInjectionConnector(ports);
 +                    } else {
 +                        process_utils_1.log(`Overlay injector didn't start`, undefined, 'error');
 +                    }
@@ -784,7 +808,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-p
 +//# sourceMappingURL=win-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-14 17:07:08.561107489 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-15 02:03:26.664305775 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-15 03:08:03.090828037 +0000
 @@ -27,7 +27,7 @@
              switch (windowId) {
                  case game_overlay_types_1.OverlayWindowId.LOL:
@@ -794,14 +818,14 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
                  default:
                      return null;
              }
-@@ -42,6 +42,7 @@
+@@ -48,6 +48,7 @@
+                 return;
              }
-         };
-         this.getConnection = (windowId) => {
-+            console.log("Get Connection", windowId);
-             const appName = this.getAppNameByWindowId(windowId);
-             if (!appName) {
-                 logs_1.gameOverlayLog.warn(`Overlay server | unknown client name: ${appName}`);
+             const pid = this.apps.get(appName);
++            console.log("PID", pid);
+             if (!lang_1.isDef(pid)) {
+                 logs_1.gameOverlayLog.warn(`Overlay server | connection for client: ${appName} is missing - the process pid is missing`);
+                 return;
 @@ -82,6 +83,7 @@
              });
          };
@@ -810,15 +834,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
              return new Promise(resolve => {
                  var _a;
                  (_a = this.server) === null || _a === void 0 ? void 0 : _a.getConnections((err, count) => {
-@@ -226,6 +228,7 @@
-         return net_1.default.createServer(this.serverConnectionListener);
-     }
-     connectToInjectorServer(pid, clientName) {
-+        console.log("Connection info", net_1, net_1.default);
-         const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
-         this.clientConnections.set(pid, connection);
-         logs_1.gameOverlayLog.debug(`Overlay server | connection to injector created, app name: ${clientName} pid: ${pid}`);
-@@ -259,4 +262,4 @@
+@@ -259,4 +261,4 @@
      }
  }
  exports.BaseOverlayServer = BaseOverlayServer;

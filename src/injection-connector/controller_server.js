@@ -7,7 +7,7 @@ const server = net.createServer((socket) => {
         console.log("Overlay server controller", 'client disconnected');
     });
     socket.on('data', (payload) => {
-        console.log("Overlay server controller", payload.toString(), this.processEvent);
+        console.log("Overlay server controller | ", payload.toString());
     });
     socket.on('connect', () => {
         console.log('Overlay server controller | socket connected');
