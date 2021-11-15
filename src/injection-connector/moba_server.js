@@ -6,7 +6,7 @@ const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
 const net = require('net');
 const server = net.createServer((socket) => {
     // 'connection' listener.
-    console.log("Overlay server connector", 'client connected to serer');
+    console.log("Overlay server connector", 'client connected to server');
     socket.on('end', () => {
         console.log("Overlay server connector", 'client disconnected');
     });

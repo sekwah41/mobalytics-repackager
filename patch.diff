@@ -321,8 +321,8 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-15 02:25:18.524256907 +0000
-@@ -0,0 +1,132 @@
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-15 02:48:13.780872342 +0000
+@@ -0,0 +1,152 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -331,6 +331,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +exports.WinOverlayInjector = void 0;
 +const child_process_1 = require("child_process");
 +const path_1 = __importDefault(require("path"));
++const net_1 = __importDefault(require("net"));
 +const paths_1 = require("../../paths");
 +const base_overlay_injector_1 = require("./base-overlay-injector");
 +const promise_with_retry_1 = require("../../../../moba-web/src/common/utils/promise-with-retry");
@@ -340,6 +341,24 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +const { getLeagueEnvVariables, createNewPorts } = require("../league-helper");
 +
 +const INJECTION_CONNECTOR_NAME = "injection-connector.exe";
++
++function setupInjectionConnector(port) {
++    try {
++        console.log("Connector controller | Creating connection on port: ", port);
++        const connection = net_1.default.createConnection({ port }, () => {
++            console.log("Connector controller | Connected to controller");
++            connection.write('Test!\r\n');
++        });
++        connection.on('data', (data) => {
++            console.log(`Connector controller | ${data}`);
++        });
++        connection.on('end', () => {
++            console.log('Connector controller | disconnected from server');
++        });
++    } catch (e) {
++        console.log("Problems", e);
++    }
++}
 +
 +/**
 + * Modified to run for linux
@@ -398,6 +417,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +            this.process.on('spawn', (message) => {
 +                process_utils_1.log(`overlay connector injector spawned`, {message});
 +            });
++            setupInjectionConnector(ports.CONTROLLER);
 +            promise_with_retry_1.promiseWithRetry(() => process_utils_1.checkIsProcessRunning(paths_1.OVERLAY_INJECTOR_FILE_NAME, paths_1.OVERLAY_INJECTOR_WIN_PROGRAM_GREP_STR), 500, result => !!result)
 +                .then(isRunning => {
 +                    if (isRunning) {
@@ -1065,7 +1085,7 @@ diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-imp
 +//# sourceMappingURL=in-game-items-import.js.map
 diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 --- original/moba-desktop/src/main.js	2021-11-14 17:07:08.551107491 +0000
-+++ modified/moba-desktop/src/main.js	2021-11-14 17:07:08.591107488 +0000
++++ modified/moba-desktop/src/main.js	2021-11-15 02:49:58.957535091 +0000
 @@ -1,6 +1,7 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
@@ -1083,12 +1103,12 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 +//# sourceMappingURL=injection.js.map
 +process
 +    .on('unhandledRejection', (reason, p) => {
-+        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: err});
 +        console.error(reason, 'Unhandled Rejection at Promise', p);
++        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: reason});
 +    })
 +    .on('uncaughtException', err => {
-+        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: err});
 +        console.error(err, 'Uncaught Exception thrown');
++        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: err.toString()});
 +        process.exit(1);
 +    });
 diff -uraN original/moba-desktop/src/paths.js modified/moba-desktop/src/paths.js
