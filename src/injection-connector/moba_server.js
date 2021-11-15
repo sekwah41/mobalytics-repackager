@@ -1,3 +1,5 @@
+const controller_server = require('./controller_server');
+
 const CLIENT_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-CLIENT-';
 const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
 
@@ -9,7 +11,7 @@ const server = net.createServer((socket) => {
         console.log("Overlay server connector", 'client disconnected');
     });
     socket.on('data', (payload) => {
-        console.log("Overlay server connector", payload.toString(), this.processEvent);
+        console.log("Overlay server connector", payload, this.processEvent);
     });
     socket.on('connect', () => {
         console.log('Overlay server connector | socket connected');
@@ -26,12 +28,12 @@ const server = net.createServer((socket) => {
 server.on('error', (err) => {
     throw err;
 });
-console.log("Setting up server");
+console.log("Overlay server connector | Setting up server");
 server.listen({
     path: SERVER_PATH,
     exclusive: false,
     readableAll: true,
     writableAll: true,
 }, () => {
-    console.log('server bound');
+    console.log('Overlay server connector | server bound');
 });

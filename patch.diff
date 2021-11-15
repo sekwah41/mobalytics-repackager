@@ -257,7 +257,7 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
 --- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-14 23:46:02.004612902 +0000
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-15 02:24:13.927592646 +0000
 @@ -0,0 +1,60 @@
 +const child_process_1 = require("child_process");
 +const process_utils_1 = require("../utils/process.utils");
@@ -266,7 +266,7 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +
 +const portTracker = {
 +    CLIENT: -1,
-+    SERVER: -1,
++    CONTROLLER: -1,
 +}
 +
 +const getPort = async () => {
@@ -314,14 +314,14 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +        return portTracker;
 +    },
 +    createNewPorts: async () => {
-+        portTracker.CLIENT = await getPort();
 +        portTracker.SERVER = await getPort();
++        portTracker.CONTROLLER = await getPort();
 +        return portTracker;
 +    }
 +}
 diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js
 --- original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-14 23:48:00.191275164 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-injector.js	2021-11-15 02:25:18.524256907 +0000
 @@ -0,0 +1,132 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -379,7 +379,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/lin-overlay-i
 +                    OVERLAY_DIR: paths_1.OVERLAY_INJECTOR_WIN_WORKING_DIR,
 +                    NODE_SKIP_PLATFORM_CHECK: "1",
 +                    WINEDEBUG: "-all",
-+                    OVERLAY_CLIENT: ports.CLIENT,
++                    OVERLAY_CONTROLLER: ports.CONTROLLER,
 +                    OVERLAY_SERVER: ports.SERVER,
 +                }
 +            });
@@ -598,7 +598,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
 +//# sourceMappingURL=base-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-14 23:42:57.904619760 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/overlay_provider_replacement.js	2021-11-15 02:33:40.850904860 +0000
 @@ -0,0 +1,128 @@
 +const fetch = require('node-fetch');
 +const logs_1 = require("../../utils/logs");
@@ -663,7 +663,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/overlay_provi
 +    // TODO queue requests until provider is ready
 +    const hostPort = await providerPort;
 +    const urlPath = `http://localhost:${hostPort}/${path}`;
-+    console.log("Calling", urlPath, "with", args);
++    process_utils_1.log(`Calling ${urlPath} with ${args}`);
 +    try {
 +        const response = await fetch(urlPath, {
 +            method: "POST",
@@ -846,16 +846,8 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-ser
 +//# sourceMappingURL=win-overlay-server.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js
 --- original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-14 17:07:08.561107489 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-15 01:07:12.447764802 +0000
-@@ -178,6 +178,7 @@
-                 this.window.webContents.send(channel, ...args);
-             }
-             else {
-+                console.log("Status", this.status, this.shouldCreateWindow(), this.windowSize);
-                 logs_1.gameOverlayLog.error('Overlay Window | Unable send to overlay window: ', [channel]);
-             }
-         };
-@@ -277,4 +278,4 @@
++++ modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-15 02:34:30.160903024 +0000
+@@ -277,4 +277,4 @@
      }
  }
  exports.BaseOverlayWindow = BaseOverlayWindow;
@@ -1111,7 +1103,7 @@ diff -uraN original/moba-desktop/src/paths.js modified/moba-desktop/src/paths.js
 +//# sourceMappingURL=paths.js.map
 diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop/src/utils/createLogger.js
 --- original/moba-desktop/src/utils/createLogger.js	2021-11-14 17:07:08.551107491 +0000
-+++ modified/moba-desktop/src/utils/createLogger.js	2021-11-15 02:06:16.564299446 +0000
++++ modified/moba-desktop/src/utils/createLogger.js	2021-11-15 02:29:09.914248286 +0000
 @@ -65,15 +65,12 @@
              format: fileLogsFormat,
          }));
@@ -1124,7 +1116,7 @@ diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop
      return winston.createLogger({
          format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
 -        level: normalizedLevel,
-+        level: 'debug',
++        level: process.env.ALL_LOGS ? 'debug' : normalizedLevel,
          transports,
      });
  }
@@ -1288,16 +1280,8 @@ diff -uraN original/moba-desktop/src/utils/lol-client.js modified/moba-desktop/s
 +//# sourceMappingURL=lol-client.js.map
 diff -uraN original/moba-desktop/src/utils/process.utils.js modified/moba-desktop/src/utils/process.utils.js
 --- original/moba-desktop/src/utils/process.utils.js	2021-11-14 17:07:08.551107491 +0000
-+++ modified/moba-desktop/src/utils/process.utils.js	2021-11-15 00:59:14.617782603 +0000
-@@ -6,6 +6,7 @@
- const environment_1 = require("./environment");
- exports.logPrefix = 'Processes utils |';
- exports.log = (message, meta = undefined, type = 'debug') => {
-+    console.log(`${exports.logPrefix} ${message}`, meta);
-     logs_1.generalLog[type](`${exports.logPrefix} ${message}`, meta);
- };
- const isProcessRunningCmd = (processName) => {
-@@ -13,6 +14,8 @@
++++ modified/moba-desktop/src/utils/process.utils.js	2021-11-15 02:33:40.830904862 +0000
+@@ -13,6 +13,8 @@
          return `tasklist`;
      if (environment_1.isOsX)
          return `ps -ax | grep ${processName}`;
@@ -1306,7 +1290,7 @@ diff -uraN original/moba-desktop/src/utils/process.utils.js modified/moba-deskto
      exports.log(`Unsupported os to check process`, { os: process.platform });
      return null;
  };
-@@ -56,7 +59,10 @@
+@@ -56,7 +58,10 @@
          }
          child_process_1.exec(cmd, (err, stdout) => {
              if (err) {
@@ -1318,7 +1302,7 @@ diff -uraN original/moba-desktop/src/utils/process.utils.js modified/moba-deskto
                  resolve(false);
              }
              exports.log(`stdout`, { processName, grepString });
-@@ -79,4 +85,4 @@
+@@ -79,4 +84,4 @@
          });
      });
  };
