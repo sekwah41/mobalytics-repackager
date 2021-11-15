@@ -764,7 +764,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-p
 +//# sourceMappingURL=win-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-14 17:07:08.561107489 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-15 01:58:41.250983074 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-15 02:03:26.664305775 +0000
 @@ -27,7 +27,7 @@
              switch (windowId) {
                  case game_overlay_types_1.OverlayWindowId.LOL:
@@ -790,15 +790,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
              return new Promise(resolve => {
                  var _a;
                  (_a = this.server) === null || _a === void 0 ? void 0 : _a.getConnections((err, count) => {
-@@ -159,6 +161,7 @@
-             return;
-         }
-         logs_1.gameOverlayLog.debug('Overlay server | server creating in progress');
-+        console.log("Creating server");
-         this.status = game_overlay_server_types_1.ServerStatus.STARTING;
-         (_a = this.server) === null || _a === void 0 ? void 0 : _a.listen({
-             path: this.SERVER_PATH,
-@@ -226,6 +229,7 @@
+@@ -226,6 +228,7 @@
          return net_1.default.createServer(this.serverConnectionListener);
      }
      connectToInjectorServer(pid, clientName) {
@@ -806,7 +798,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
          const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
          this.clientConnections.set(pid, connection);
          logs_1.gameOverlayLog.debug(`Overlay server | connection to injector created, app name: ${clientName} pid: ${pid}`);
-@@ -259,4 +263,4 @@
+@@ -259,4 +262,4 @@
      }
  }
  exports.BaseOverlayServer = BaseOverlayServer;
@@ -1119,7 +1111,7 @@ diff -uraN original/moba-desktop/src/paths.js modified/moba-desktop/src/paths.js
 +//# sourceMappingURL=paths.js.map
 diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop/src/utils/createLogger.js
 --- original/moba-desktop/src/utils/createLogger.js	2021-11-14 17:07:08.551107491 +0000
-+++ modified/moba-desktop/src/utils/createLogger.js	2021-11-15 01:59:12.160981922 +0000
++++ modified/moba-desktop/src/utils/createLogger.js	2021-11-15 02:06:16.564299446 +0000
 @@ -65,15 +65,12 @@
              format: fileLogsFormat,
          }));
@@ -1132,7 +1124,7 @@ diff -uraN original/moba-desktop/src/utils/createLogger.js modified/moba-desktop
      return winston.createLogger({
          format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
 -        level: normalizedLevel,
-+        //level: normalizedLevel,
++        level: 'debug',
          transports,
      });
  }
