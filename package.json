@@ -13,6 +13,7 @@
     "generate-package-diff": "cd app && diff -uaN ../moba-package-backup.json package.json > ../package.diff || true",
     "postextract": "yarn patch-package && electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
+    "predist": "yarn compile-client-connector && yarn compile-injection-connector && yarn compile-provider-connector",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
     "generate-patches": "cd src && diff -uraN original modified > ../patch.diff || true",
     "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
