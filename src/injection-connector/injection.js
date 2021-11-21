@@ -69,7 +69,3 @@ overlay_process.on('message', (message) => {
 overlay_process.on('spawn', (message) => {
     console.log(`overlay connector: overlay injector spawned`, { message });
 });
-
-setInterval(() => {
-    console.log("Connector is running");
-}, 2000);

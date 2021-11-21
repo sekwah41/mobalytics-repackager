@@ -25,6 +25,7 @@
     "snap-build": "yarn deep-clean && snapcraft build",
     "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload",
     "compile-injection-connector": "pkg src/injection-connector/injection.js --target=node16-windows --output=app/injection-connector",
+    "compile-client-connector": "pkg src/client-connector/client_connector.js --target=node16-windows --output=app/client-connector",
     "compile-provider-connector": "pkg src/overlay-provider/provider-connector.js --target=node16-windows --output=app/overlay-provider"
   },
   "dependencies": {

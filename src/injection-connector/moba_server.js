@@ -1,9 +1,6 @@
-const controller_server = require('./controller_server');
-
-const CLIENT_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-CLIENT-';
-const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
-
 const net = require('net');
+
+const SERVER_PATH = '\\\\.\\pipe\\MOBA-OVERLAY-SERVER';
 
 let connections = [];
 
@@ -47,7 +44,7 @@ const moba_server = net.createServer((socket) => {
         connections.forEach(connection => {
             connection.write(payload);
         });
-        console.log("Overlay server connector", payload, connections.length);
+        //console.log("Overlay server connector", payload, connections.length);
     });
     socket.on('connect', () => {
         console.log('Overlay server connector | socket connected');

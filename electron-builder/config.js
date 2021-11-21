@@ -12,7 +12,8 @@ module.exports = {
     ],
     extraResources: [
         "app/injection-connector.exe",
-        "app/overlay-provider.exe"
+        "app/overlay-provider.exe",
+        "app/client-connector.exe"
     ],
     linux: {
         icon: "resources/icons/",
