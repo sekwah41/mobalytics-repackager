@@ -1,5 +1,5 @@
---- ../moba-package-backup.json	2021-11-13 20:58:34.498140106 +0000
-+++ package.json	2021-11-13 22:00:27.314751735 +0000
+--- ../moba-package-backup.json	2021-11-22 00:13:25.221825304 +0000
++++ package.json	2021-11-22 00:13:25.225158637 +0000
 @@ -51,6 +51,10 @@
      "js-sha256": "^0.9.0",
      "lodash.throttle": "4.1.1",
@@ -7,7 +7,7 @@
 +    "@electron/remote": "^2.0.1",
 +    "axios": "0.24.0",
 +    "electron-prompt": "^1.7.0",
-+    "get-port": "6.0.0",
++    "portfinder": "1.0.28",
      "make-promises-safe": "^5.1.0",
      "node-fetch": "^2.6.0",
      "plist": "^3.0.1",
