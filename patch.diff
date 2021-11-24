@@ -1,6 +1,6 @@
 diff -uraN original/moba-desktop/src/app/app.js modified/moba-desktop/src/app/app.js
 --- original/moba-desktop/src/app/app.js	2021-11-22 00:13:50.398491032 +0000
-+++ modified/moba-desktop/src/app/app.js	2021-11-22 00:13:50.421824365 +0000
++++ modified/moba-desktop/src/app/app.js	2021-11-22 00:20:46.715142190 +0000
 @@ -57,4 +57,4 @@
      });
  }
@@ -257,8 +257,8 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
 --- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-22 00:14:56.788488559 +0000
-@@ -0,0 +1,54 @@
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-24 01:57:17.201856427 +0000
+@@ -0,0 +1,60 @@
 +const child_process_1 = require("child_process");
 +const process_utils_1 = require("../utils/process.utils");
 +const fs = require("fs");
@@ -274,7 +274,7 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +            child_process_1.exec("ps -ax | grep -v grep | grep wine | grep LeagueClient.exe", (err, stdout) => {
 +                if(err) {
 +                    process_utils_1.log("Could not find wine start process");
-+                    reject();
++                    reject(new Error("Could not find wine start process"));
 +                    return;
 +                }
 +                try {
@@ -296,14 +296,20 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +                    } else {
 +                        process_utils_1.log("Could not find wine start process");
 +                    }
-+                    reject();
++                    reject(new Error("Problem getting league info"));
 +                } catch(e) {
-+                    reject();
++                    reject(new Error("Error getting league info"));
 +                }
 +            });
 +        });
 +    },
-+    getPort: () => portfinder.getPortPromise,
++    getPort: async () => {
++        try {
++            return await portfinder.getPortPromise();
++        } catch (e) {
++            return -1;
++        }
++    },
 +    getUsedPorts: () => {
 +        return portTracker;
 +    },
@@ -1095,8 +1101,8 @@ diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-imp
 +//# sourceMappingURL=in-game-items-import.js.map
 diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 --- original/moba-desktop/src/main.js	2021-11-22 00:13:50.388491030 +0000
-+++ modified/moba-desktop/src/main.js	2021-11-22 00:17:51.118482065 +0000
-@@ -1,6 +1,7 @@
++++ modified/moba-desktop/src/main.js	2021-11-24 01:59:06.528525216 +0000
+@@ -1,12 +1,24 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
  const electron_1 = require("electron");
@@ -1104,7 +1110,9 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
  const app_1 = require("./app/app");
  const logs_1 = require("./utils/logs");
  require("../../moba-web/src/common/types/global.types");
-@@ -9,4 +10,14 @@
+ require("../../moba-web/src/common/utils/request-idle-polyfill");
+ const MakePromisesSafe = require('make-promises-safe');
++process.traceProcessWarnings = true;
  MakePromisesSafe.logError = (err) => logs_1.generalLog.error('Uncaught promise exception error: ', err);
  const gotTheLock = electron_1.app.requestSingleInstanceLock();
  gotTheLock ? app_1.runApp() : electron_1.app.quit();
@@ -1114,7 +1122,7 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 +process
 +    .on('unhandledRejection', (reason, p) => {
 +        console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
-+        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: reason});
++        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: reason.toString()});
 +    })
 +    .on('uncaughtException', err => {
 +        console.error(err, 'Uncaught Exception thrown');
