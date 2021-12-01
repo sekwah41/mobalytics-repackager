@@ -821,10 +821,10 @@ electron-publish@22.13.1:
     lazy-val "^1.0.5"
     mime "^2.5.2"
 
-electron@14.2.0:
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.0.tgz#374a9b5d76b8c1e5f123a464200e5db1eabbcbd9"
-  integrity sha512-6CmAv1P0xcwK3FQOSA27fHI36/wctSFVgj46VODn56srXXQWeolkK1VzeAFNE613iAuuH9jJdHvE3gz+c7XkNA==
+electron@14.2.2:
+  version "14.2.2"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.2.tgz#0d94f1fdaa8283979adde6178c2ef5a0f86a6470"
+  integrity sha512-1nh4NUQ/7jxVEQdxdgPWFq8jGWgUSSF62jni+5jvQNIZZN4/q1wbGN2i/tg/t4oeU5EtOOloa43Y9d29VmvPuw==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
