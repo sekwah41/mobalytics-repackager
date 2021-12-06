@@ -689,7 +689,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-injector/win-overlay-i
 +//# sourceMappingURL=win-overlay-injector.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js
 --- original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-11-22 00:13:50.398491032 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-12-06 01:39:32.293236290 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-provider/base-overlay-provider.js	2021-12-06 01:54:23.509869758 +0000
 @@ -22,6 +22,7 @@
  class BaseOverlayProvider extends events_1.EventEmitter {
      constructor() {
@@ -728,15 +728,24 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/base-overlay-
              logs_1.gameOverlayLog.error("Overlay provider | occurred error while trying to start overlay's provider. ", {
                  error,
                  path: paths_1.OVERLAY_MODULE_PATH,
-@@ -108,6 +108,7 @@
-             logs_1.gameOverlayLog.debug(`Overlay provider | try to send image buffer - length: ${bitmapBuffer.length} correct: ${isBufferSizeCorrect} image: ${imageWidth}x${imageHeight}, overlay fragment: ${overlayWidth}x${overlayHeight}`);
-             if (isBufferSizeCorrect) {
-                 try {
-+                    console.log("I WANT TO SEND THIS");
-                     this.sendFrameBuffer(connection, windowId, image, overlayWidth, overlayHeight, shouldBlockEvents);
-                 }
-                 catch (e) {
-@@ -150,4 +151,4 @@
+@@ -122,11 +122,16 @@
+     sendFrameBuffer(clientStream, id, image, width, height, blockingEvents) {
+         var _a;
+         var wnd = (_a = this.provider) === null || _a === void 0 ? void 0 : _a.prepareFrameBuffer(id, image.getBitmap(), image.getSize().width, image.getSize().height, width, height);
++        console.log("Frame buffer prepared");
+         if (wnd !== undefined) {
+             this.builder.clear();
++            console.log("Builder Cleared");
+             const e = game_overlay_provider_types_1.OverlayIPC.Event.createEvent(this.builder, game_overlay_provider_types_1.OverlayIPC.Type.FrameBuffer, FrameBuffer.createFrameBuffer(this.builder, this.builder.createString(wnd.name), blockingEvents));
++            console.log("Event created");
+             this.builder.finish(e);
++            console.log("Builder finished");
+             clientStream.write(game_overlay_provider_1.makeEvent(this.builder));
++            console.log("Data written");
+         }
+     }
+     sendHotKey(hotkey, connection, windowId) {
+@@ -150,4 +155,4 @@
      }
  }
  exports.BaseOverlayProvider = BaseOverlayProvider;
@@ -1368,8 +1377,16 @@ diff -uraN original/moba-desktop/src/utils/game-overlay/debug-windows.js modifie
 +//# sourceMappingURL=debug-windows.js.map
 diff -uraN original/moba-desktop/src/utils/game-overlay/game-overlay.js modified/moba-desktop/src/utils/game-overlay/game-overlay.js
 --- original/moba-desktop/src/utils/game-overlay/game-overlay.js	2021-11-22 00:13:50.391824366 +0000
-+++ modified/moba-desktop/src/utils/game-overlay/game-overlay.js	2021-11-22 00:13:50.425157698 +0000
-@@ -176,4 +176,4 @@
++++ modified/moba-desktop/src/utils/game-overlay/game-overlay.js	2021-12-06 01:52:43.436540152 +0000
+@@ -29,6 +29,7 @@
+ });
+ exports.size1x1 = { width: 1, height: 1 };
+ exports.logPreparingImageError = (windowId, buffer, imageWidth, imageHeight, overlayWidth, overlayHeight, error) => {
++    console.trace("Log prep buffer issue");
+     logs_1.gameOverlayLog.error(`Overlay provider | Something went wrong when prepare frame buffer`, {
+         windowId,
+         bufferLength: buffer.length,
+@@ -176,4 +177,4 @@
          game_overlay_injector_1.stopInjectorServiceForMac();
      }
  };
