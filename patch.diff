@@ -257,13 +257,19 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
 --- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-12-06 00:24:42.626736871 +0000
-@@ -0,0 +1,114 @@
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-12-06 01:29:46.236591454 +0000
+@@ -0,0 +1,151 @@
++"use strict";
++var __importDefault = (this && this.__importDefault) || function (mod) {
++    return (mod && mod.__esModule) ? mod : { "default": mod };
++};
 +const child_process_1 = require("child_process");
 +const process_utils_1 = require("../utils/process.utils");
++const net_1 = __importDefault(require("net"));
 +const fs = require("fs");
 +const portfinder = require('portfinder');
 +const path = require("path");
++const net = require("net");
 +
 +const portTracker = {
 +    CLIENT: -1,
@@ -335,6 +341,7 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +                ...leagueVariables,
 +                NODE_SKIP_PLATFORM_CHECK: "1",
 +                WINEDEBUG: "-all",
++                CLIENT_PORT: port,
 +                LOL_PID: pid,
 +            }
 +        });
@@ -354,7 +361,37 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +            process_utils_1.log(`client connector overlay connector injector spawned`, {message});
 +        });
 +
-+        // TODO add connection code to pipe to local location.
++        // TODO add connection code to pipe to local location. (and maybe get it to retry if it fails)
++        try {
++            console.log("Client connector | Connecting to port: ", port);
++            const server_connection = net_1.default.createConnection({ port: port }, () => {
++                console.log("Client proxy | Connected to server_port");
++            });
++            const client_proxy = net.createServer((socket) => {
++                // 'connection' listener.
++                console.log("Client connector | client connected to server");
++                socket.on('data', (data) => {
++                    server_connection.write(data);
++                });
++                socket.on('end', () => {
++                    server_connection.end();
++                    console.log('Client proxy | disconnected from server');
++                });
++            });
++            client_proxy.listen({
++                path: `/tmp/MOBA-OVERLAY-CLIENT-${pid}`,
++                exclusive: false,
++                readableAll: true,
++                writableAll: true,
++            }, () => {
++                console.log('Overlay server connector | server bound');
++            });
++            server_connection.on('error', (err) =>{
++                console.log('Client proxy | error', err);
++            });
++        } catch (e) {
++            console.log("Problems", e);
++        }
 +    }
 +
 +    return openPIDPorts.get(pid);
@@ -862,7 +899,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-p
 +//# sourceMappingURL=win-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-22 00:13:50.398491032 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-12-06 00:10:52.786767784 +0000
++++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-12-06 01:23:18.083272581 +0000
 @@ -12,6 +12,7 @@
  const game_overlay_types_1 = require("../../../../moba-web/src/common/types/game-overlay.types");
  const game_overlay_server_types_1 = require("../../types/game-overlay/game-overlay-server.types");
@@ -905,14 +942,27 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
              windowIds === null || windowIds === void 0 ? void 0 : windowIds.forEach(windowId => this.emit(event.type, event, windowId));
          };
          this.overlayProvider = overlayProvider;
-@@ -226,6 +231,7 @@
+@@ -225,8 +230,9 @@
+     createServerInternal() {
          return net_1.default.createServer(this.serverConnectionListener);
      }
-     connectToInjectorServer(pid, clientName) {
-+        createPIDConnector(pid);
-         const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
+-    connectToInjectorServer(pid, clientName) {
+-        const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
++    async connectToInjectorServer(pid, clientName) {
++        await createPIDConnector(pid);
++        const connection = net_1.default.createConnection({path: `${this.CLIENT_PATH}${pid}`});
          this.clientConnections.set(pid, connection);
          logs_1.gameOverlayLog.debug(`Overlay server | connection to injector created, app name: ${clientName} pid: ${pid}`);
+         connection.on('error', error => {
+@@ -236,7 +242,7 @@
+             this.clientConnections.delete(pid);
+         });
+         connection.on('close', error => {
+-            logs_1.gameOverlayLog.warn(`Overlay server | connection has been destroyed and closed, app name: ${clientName} pid: ${pid}`, { error });
++            logs_1.gameOverlayLog.warn(`Overlay server | connection has been destroyed and closed, app name: ${clientName} pid: ${pid}`, {error});
+             this.clientConnections.delete(pid);
+         });
+         return connection;
 @@ -259,4 +265,4 @@
      }
  }

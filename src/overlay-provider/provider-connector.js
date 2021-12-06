@@ -24,8 +24,8 @@ if(fs.existsSync(temp_provider)) {
 const provider = require(temp_provider);
 
 let app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 let server = app.listen((process.env.PORT || 54823), () => {
 
     let host = server.address().address;
