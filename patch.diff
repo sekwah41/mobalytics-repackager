@@ -257,8 +257,8 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
 --- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-12-06 01:43:10.739894819 +0000
-@@ -0,0 +1,153 @@
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-12-06 01:49:26.613214150 +0000
+@@ -0,0 +1,155 @@
 +"use strict";
 +var __importDefault = (this && this.__importDefault) || function (mod) {
 +    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -379,7 +379,9 @@ diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba
 +                });
 +            });
 +            const unix_file = `/tmp/MOBA-OVERLAY-CLIENT-${pid}`;
-+            if(fs.exists(unix_file)) fs.unlink(unix_file);
++            if(fs.existsSync(unix_file)) {
++                fs.unlinkSync(unix_file);
++            }
 +            client_proxy.listen({
 +                path: unix_file,
 +                exclusive: false,
