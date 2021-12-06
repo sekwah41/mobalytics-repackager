@@ -257,59 +257,113 @@ diff -uraN original/moba-desktop/src/game-overlay/game-overlay-manager.js modifi
 +//# sourceMappingURL=game-overlay-manager.js.map
 diff -uraN original/moba-desktop/src/game-overlay/league-helper.js modified/moba-desktop/src/game-overlay/league-helper.js
 --- original/moba-desktop/src/game-overlay/league-helper.js	1970-01-01 01:00:00.000000000 +0100
-+++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-11-24 02:02:31.111862521 +0000
-@@ -0,0 +1,60 @@
++++ modified/moba-desktop/src/game-overlay/league-helper.js	2021-12-06 00:24:42.626736871 +0000
+@@ -0,0 +1,114 @@
 +const child_process_1 = require("child_process");
 +const process_utils_1 = require("../utils/process.utils");
 +const fs = require("fs");
 +const portfinder = require('portfinder');
++const path = require("path");
 +
 +const portTracker = {
 +    CLIENT: -1,
 +    CONTROLLER: -1,
 +}
-+module.exports = {
-+    getLeagueEnvVariables: ()  => {
-+        return new Promise((resolve,reject) => {
-+            child_process_1.exec("ps -ax | grep -v grep | grep wine | grep RiotClientServices.exe", (err, stdout) => {
-+                if(err) {
-+                    process_utils_1.log("Could not find wine start process");
-+                    reject(new Error("Could not find wine start process"));
++
++const openPIDPorts = new Map();
++
++const getPort = async () => {
++    try {
++        return await portfinder.getPortPromise();
++    } catch (e) {
++        return -1;
++    }
++};
++
++const getLeagueEnvVariables = ()  => {
++    return new Promise((resolve,reject) => {
++        child_process_1.exec("ps -ax | grep -v grep | grep wine | grep RiotClientServices.exe", (err, stdout) => {
++            if(err) {
++                process_utils_1.log("Could not find wine start process");
++                reject(new Error("Could not find wine start process"));
++                return;
++            }
++            try {
++                const processId = /([0-9])+/.exec(stdout);
++                if(processId) {
++                    process_utils_1.log(`Reading /proc/${processId[0]}/environ`);
++                    const envVariables = fs.readFileSync(`/proc/${processId[0]}/environ`).toString('utf8').split('\0').map(value => {
++                        const indexOf = value.indexOf('=');
++                        return [value.slice(0,indexOf), value.slice(indexOf + 1)];
++                    });
++                    const leagueEnv = {};
++                    envVariables.forEach(value => {
++                        if(value[0].length > 0) {
++                            leagueEnv[value[0]] = value[1];
++                        }
++                    });
++                    resolve(leagueEnv);
 +                    return;
++                } else {
++                    process_utils_1.log("Could not find wine start process");
 +                }
-+                try {
-+                    const processId = /([0-9])+/.exec(stdout);
-+                    if(processId) {
-+                        process_utils_1.log(`Reading /proc/${processId[0]}/environ`);
-+                        const envVariables = fs.readFileSync(`/proc/${processId[0]}/environ`).toString('utf8').split('\0').map(value => {
-+                            const indexOf = value.indexOf('=');
-+                            return [value.slice(0,indexOf), value.slice(indexOf + 1)];
-+                        });
-+                        const leagueEnv = {};
-+                        envVariables.forEach(value => {
-+                            if(value[0].length > 0) {
-+                                leagueEnv[value[0]] = value[1];
-+                            }
-+                        });
-+                        resolve(leagueEnv);
-+                        return;
-+                    } else {
-+                        process_utils_1.log("Could not find wine start process");
-+                    }
-+                    reject(new Error("Problem getting league info"));
-+                } catch(e) {
-+                    reject(new Error("Error getting league info"));
-+                }
-+            });
++                reject(new Error("Problem getting league info"));
++            } catch(e) {
++                reject(new Error("Error getting league info"));
++            }
 +        });
-+    },
-+    getPort: async () => {
-+        try {
-+            return await portfinder.getPortPromise();
-+        } catch (e) {
-+            return -1;
-+        }
-+    },
++    });
++};
++
++// Runs the client connector inside wine
++const createPIDConnector = async (pid) => {
++    console.log(`Create connector for:`, pid);
++    if (!openPIDPorts.has(pid)) {
++        const port = await getPort();
++        openPIDPorts.set(pid, port);
++        const CLIENT_CONNECTOR_NAME = path.join("client-connector.exe");
++        const clientConnectorDir = path.join(process.resourcesPath, "app");
++        const leagueVariables = await getLeagueEnvVariables();
++
++        const injectConnCommand = `${leagueVariables.WINE} ${CLIENT_CONNECTOR_NAME}`;
++        console.log("Spawn client connector ")
++        const client_connector_process = child_process_1.spawn(injectConnCommand, {
++            shell: true,
++            stdio: ['inherit', 'inherit', 'inherit'],
++            cwd: clientConnectorDir,
++            env: {
++                ...leagueVariables,
++                NODE_SKIP_PLATFORM_CHECK: "1",
++                WINEDEBUG: "-all",
++                LOL_PID: pid,
++            }
++        });
++        client_connector_process.on('close', (code, signal) => {
++            process_utils_1.log(`client connector was closed, code: ${code}, signal: ${signal}`);
++        });
++        client_connector_process.on('error', (err) => {
++            process_utils_1.log(`client connector error: ${err}`);
++        });
++        client_connector_process.on('exit', (code, signal) => {
++            process_utils_1.log(`client connector exit, code: ${code}, signal: ${signal}`);
++        });
++        client_connector_process.on('message', (message) => {
++            process_utils_1.log(`client connector exit, message: ${message}`);
++        });
++        client_connector_process.on('spawn', (message) => {
++            process_utils_1.log(`client connector overlay connector injector spawned`, {message});
++        });
++
++        // TODO add connection code to pipe to local location.
++    }
++
++    return openPIDPorts.get(pid);
++};
++
++module.exports = {
++    getLeagueEnvVariables,
++    getPort,
++    createPIDConnector,
 +    getUsedPorts: () => {
 +        return portTracker;
 +    },
@@ -808,8 +862,16 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-provider/win-overlay-p
 +//# sourceMappingURL=win-overlay-provider.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js
 --- original/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-22 00:13:50.398491032 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-11-22 00:13:50.425157698 +0000
-@@ -27,7 +27,7 @@
++++ modified/moba-desktop/src/game-overlay/overlay-server/base-overlay-server.js	2021-12-06 00:10:52.786767784 +0000
+@@ -12,6 +12,7 @@
+ const game_overlay_types_1 = require("../../../../moba-web/src/common/types/game-overlay.types");
+ const game_overlay_server_types_1 = require("../../types/game-overlay/game-overlay-server.types");
+ const game_overlay_provider_1 = require("../../utils/game-overlay/game-overlay-provider");
++const { createPIDConnector } = require("../league-helper");
+ class BaseOverlayServer extends events_1.EventEmitter {
+     constructor(clientPath, serverPath, overlayProvider) {
+         super();
+@@ -27,7 +28,7 @@
              switch (windowId) {
                  case game_overlay_types_1.OverlayWindowId.LOL:
                  case game_overlay_types_1.OverlayWindowId.TFT:
@@ -818,7 +880,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
                  default:
                      return null;
              }
-@@ -48,6 +48,7 @@
+@@ -48,6 +49,7 @@
                  return;
              }
              const pid = this.apps.get(appName);
@@ -826,7 +888,7 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
              if (!lang_1.isDef(pid)) {
                  logs_1.gameOverlayLog.warn(`Overlay server | connection for client: ${appName} is missing - the process pid is missing`);
                  return;
-@@ -82,6 +83,7 @@
+@@ -82,6 +84,7 @@
              });
          };
          this.checkServerConnections = () => {
@@ -834,7 +896,24 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/base-overlay-se
              return new Promise(resolve => {
                  var _a;
                  (_a = this.server) === null || _a === void 0 ? void 0 : _a.getConnections((err, count) => {
-@@ -259,4 +261,4 @@
+@@ -123,6 +126,8 @@
+                 appName = this.getAppNameByPid(pid);
+             }
+             const windowIds = appName && this.getWindowIdsByAppName(appName);
++            // TODO figure out the difference between windows and linux events (to stop crashes)
++            console.log(event);
+             windowIds === null || windowIds === void 0 ? void 0 : windowIds.forEach(windowId => this.emit(event.type, event, windowId));
+         };
+         this.overlayProvider = overlayProvider;
+@@ -226,6 +231,7 @@
+         return net_1.default.createServer(this.serverConnectionListener);
+     }
+     connectToInjectorServer(pid, clientName) {
++        createPIDConnector(pid);
+         const connection = net_1.default.createConnection({ path: `${this.CLIENT_PATH}${pid}` });
+         this.clientConnections.set(pid, connection);
+         logs_1.gameOverlayLog.debug(`Overlay server | connection to injector created, app name: ${clientName} pid: ${pid}`);
+@@ -259,4 +265,4 @@
      }
  }
  exports.BaseOverlayServer = BaseOverlayServer;
@@ -882,8 +961,18 @@ diff -uraN original/moba-desktop/src/game-overlay/overlay-server/win-overlay-ser
 +//# sourceMappingURL=win-overlay-server.js.map
 diff -uraN original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js
 --- original/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-22 00:13:50.398491032 +0000
-+++ modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-11-22 00:13:50.425157698 +0000
-@@ -277,4 +277,4 @@
++++ modified/moba-desktop/src/game-overlay/overlay-window/base-overlay-window.js	2021-12-06 00:05:32.370113055 +0000
+@@ -190,7 +190,8 @@
+             const isWindowAlive = this.isWindowAlive();
+             const webContents = (_a = this.window) === null || _a === void 0 ? void 0 : _a.webContents;
+             if (isWindowAlive && webContents) {
+-                webContents === null || webContents === void 0 ? void 0 : webContents.sendInputEvent(inputEvent);
++                // TODO re-enable when figured out what event data is different windows vs linux (Without this i dont think you can interact with the overlay)
++                // webContents === null || webContents === void 0 ? void 0 : webContents.sendInputEvent(inputEvent);
+             }
+         };
+         this.setSize = (size) => {
+@@ -277,4 +278,4 @@
      }
  }
  exports.BaseOverlayWindow = BaseOverlayWindow;
