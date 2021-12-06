@@ -19,7 +19,7 @@ const moba_server_proxy = net.createServer((socket) => {
         console.log("Overlay server connector proxy", 'client disconnected');
     });
     socket.on('data', (payload) => {
-        console.log("Overlay server connector proxy", payload);
+        //console.log("Overlay server connector proxy", payload);
     });
     socket.on('connect', () => {
         console.log('Overlay server connector proxy | socket connected');
