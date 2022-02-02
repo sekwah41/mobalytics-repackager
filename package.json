@@ -15,7 +15,7 @@
     "dist": "electron-builder --config electron-builder/config.js",
     "postinstall": "yarn setup",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
-    "generate-patches": "cd src && diff -uraN original modified > ../patch.diff || true",
+    "generate-patches": "cd src && diff -raN -U 6 original modified > ../patch.diff || true",
     "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
     "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",

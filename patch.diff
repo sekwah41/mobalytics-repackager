@@ -1,26 +1,38 @@
-diff -uraN original/moba-desktop/src/app/app.js modified/moba-desktop/src/app/app.js
---- original/moba-desktop/src/app/app.js	2021-11-04 20:31:47.930682735 +0000
-+++ modified/moba-desktop/src/app/app.js	2021-11-04 20:31:47.954016070 +0000
-@@ -57,4 +57,4 @@
+diff -raN -U 6 original/moba-desktop/src/app/app.js modified/moba-desktop/src/app/app.js
+--- original/moba-desktop/src/app/app.js	2022-02-02 18:14:04.044680890 +0000
++++ modified/moba-desktop/src/app/app.js	2022-02-02 18:14:04.074680889 +0000
+@@ -64,7 +64,7 @@
+     });
+     electron_1.app.on('activate', () => {
+         electron_1.app.isReady() && main_window_1.showOrCreateWindow();
      });
  }
  exports.runApp = runApp;
 -//# sourceMappingURL=app.js.map
 \ No newline at end of file
 +//# sourceMappingURL=app.js.map
-diff -uraN original/moba-desktop/src/app/auto-update.js modified/moba-desktop/src/app/auto-update.js
---- original/moba-desktop/src/app/auto-update.js	2021-11-04 20:31:47.930682735 +0000
-+++ modified/moba-desktop/src/app/auto-update.js	2021-11-04 20:31:47.954016070 +0000
-@@ -23,7 +23,7 @@
+diff -raN -U 6 original/moba-desktop/src/app/auto-update.js modified/moba-desktop/src/app/auto-update.js
+--- original/moba-desktop/src/app/auto-update.js	2022-02-02 18:14:04.044680890 +0000
++++ modified/moba-desktop/src/app/auto-update.js	2022-02-02 18:14:04.074680889 +0000
+@@ -22,13 +22,13 @@
+ const version_utils_1 = require("../utils/version.utils");
+ const navigation_1 = require("../utils/navigation");
+ const url_1 = require("../../../moba-web/src/common/types/url");
  function init() {
      electron_updater_1.autoUpdater.autoDownload = false;
      electron_updater_1.autoUpdater.allowDowngrade = true;
 -    electron_updater_1.autoUpdater.autoInstallOnAppQuit = true;
 +    electron_updater_1.autoUpdater.autoInstallOnAppQuit = false;
      electron_updater_1.autoUpdater.logger = logs_1.appAutoUpdateLog;
-     if (environment_1.IS_ELECTRON_DEV) {
-         electron_updater_1.autoUpdater.channel = app_config_1.DESKTOP_DEV_UPDATE_CHANNEL;
-@@ -53,7 +53,7 @@
+     electron_updater_1.autoUpdater.on('checking-for-update', () => {
+         main_window_1.sendAppUpdateStatus(desktop_types_1.AppUpdateStatus.CHECKING_FOR_UPDATE);
+     });
+     electron_updater_1.autoUpdater.on('update-available', (_data) => __awaiter(this, void 0, void 0, function* () {
+         var _a;
+@@ -48,13 +48,13 @@
+         main_window_1.sendAppUpdateStatus(desktop_types_1.AppUpdateStatus.DOWNLOADING, progress);
+     });
+     electron_updater_1.autoUpdater.on('update-downloaded', () => {
          main_window_1.sendAppUpdateStatus(desktop_types_1.AppUpdateStatus.UPDATE_DOWNLOADED);
      });
      electron_updater_1.autoUpdater.on('error', err => {
@@ -29,17 +41,26 @@ diff -uraN original/moba-desktop/src/app/auto-update.js modified/moba-desktop/sr
          logs_1.appAutoUpdateLog.error('Error: ', err);
      });
      setInterval(checkForUpdates, app_config_1.DESKTOP_APP_UPDATE_INTERVAL);
-@@ -85,4 +85,4 @@
+ }
+ exports.init = init;
+ function checkForUpdatesIfNeeded() {
+@@ -92,7 +92,7 @@
+ }
+ exports.downloadUpdate = downloadUpdate;
+ function quitAndInstall() {
      electron_updater_1.autoUpdater.quitAndInstall();
  }
  exports.quitAndInstall = quitAndInstall;
 -//# sourceMappingURL=auto-update.js.map
 \ No newline at end of file
 +//# sourceMappingURL=auto-update.js.map
-diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
---- original/moba-desktop/src/app/deep-linking.js	2021-11-04 20:31:47.930682735 +0000
-+++ modified/moba-desktop/src/app/deep-linking.js	2021-11-04 20:31:47.954016070 +0000
-@@ -34,8 +34,10 @@
+diff -raN -U 6 original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
+--- original/moba-desktop/src/app/deep-linking.js	2022-02-02 18:14:04.044680890 +0000
++++ modified/moba-desktop/src/app/deep-linking.js	2022-02-02 18:14:07.871347414 +0000
+@@ -31,14 +31,16 @@
+ const main_window_1 = require("../windows/main/main.window");
+ const deep_linking_types_1 = require("../../../moba-web/src/common/types/deep-linking.types");
+ const game_overlay_1 = require("../utils/game-overlay/game-overlay");
  const ipc_messages_types_1 = require("../../../moba-web/src/common/types/desktop/ipc-messages.types");
  function initDeepLinking() {
      electron_1.app.removeAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME);
@@ -52,7 +73,13 @@ diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/s
      }
      else {
          electron_1.app.setAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME);
-@@ -52,7 +54,7 @@
+     }
+ }
+ exports.initDeepLinking = initDeepLinking;
+@@ -49,13 +51,13 @@
+             processDeepLinkingUrl(url);
+         }
+         logs_1.appUrlsLog.debug(`open-url: ${url}`);
          main_window_1.showAndRestoreMainWindow();
      });
      electron_1.app.on('second-instance', (_e, argv) => {
@@ -61,57 +88,49 @@ diff -uraN original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/s
              const url = argv.find(it => it.startsWith(`${app_config_1.MOBA_PROTOCOL_NAME}:`));
              url && processDeepLinkingUrl(url);
          }
-@@ -84,4 +86,4 @@
+         logs_1.appUrlsLog.debug('second-instance: ', argv);
+         main_window_1.showAndRestoreMainWindow();
+     });
+@@ -87,7 +89,7 @@
+         }
+     }
+     else {
          logs_1.appUrlsLog.error('Unknown moba protocol communication url: ', { url });
      }
  }
 -//# sourceMappingURL=deep-linking.js.map
 \ No newline at end of file
 +//# sourceMappingURL=deep-linking.js.map
-diff -uraN original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
---- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 20:31:47.930682735 +0000
-+++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2021-11-04 20:31:47.954016070 +0000
-@@ -170,7 +170,7 @@
-     }));
-     ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.IS_TOBII_AVAILABLE, () => {
-         return new Promise(resolve => {
--            if (environment_1.isWin) {
-+            if (environment_1.isWin || environment_1.isLinux) {
-                 const reader = new gaze_reader_process_1.GazeReaderProcess();
-                 reader
-                     .spawn(null)
-@@ -197,7 +197,7 @@
-     });
-     ipc_main_1.ipcMainHandle(ipc_messages_types_1.IPC_MESSAGE.CHECK_TOBII_TRACKER_STATUS, () => {
-         return new Promise(resolve => {
--            if (environment_1.isWin) {
-+            if (environment_1.isWin || environment_1.isLinux) {
-                 const reader = new gaze_reader_process_1.GazeReaderProcess();
-                 reader
-                     .spawn(null)
-@@ -242,4 +242,4 @@
+diff -raN -U 6 original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
+--- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2022-02-02 18:14:04.044680890 +0000
++++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2022-02-02 18:14:07.871347414 +0000
+@@ -17,7 +17,7 @@
+     lc_emulation_ipc_1.initLcEmulationIpc();
+     lol_status_bar_ipc_1.initLolStatusBarIpc();
      app_settings_ipc_1.initAppSettingsIpc();
+     post_game_highlights_ipc_1.initPostGameHighlightsIpc();
  }
  exports.init = init;
 -//# sourceMappingURL=ipc-protocol.js.map
 \ No newline at end of file
 +//# sourceMappingURL=ipc-protocol.js.map
-diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
---- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 20:31:47.930682735 +0000
-+++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2021-11-04 21:11:14.450647659 +0000
-@@ -11,18 +11,40 @@
+diff -raN -U 6 original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
+--- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2022-02-02 18:14:04.044680890 +0000
++++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2022-02-02 18:31:54.894640997 +0000
+@@ -9,23 +9,45 @@
+     });
+ };
  Object.defineProperty(exports, "__esModule", { value: true });
- exports.showSelectFolderDialog = void 0;
+ exports.showSelectLolClientFolderDialog = void 0;
  const electron_1 = require("electron");
-+const prompt = require('electron-prompt');
  const lcu_connection_1 = require("../utils/lcu-connection");
++const prompt = require('electron-prompt');
  const ipc_messages_types_1 = require("../../../moba-web/src/common/types/desktop/ipc-messages.types");
- function showSelectFolderDialog(window) {
+ function showSelectLolClientFolderDialog(window) {
      if (electron_1.remote) {
          return electron_1.remote.dialog
              .showOpenDialog(window, {
--            title: 'Choose the LoL installation path. e.g C:\\Riot Games\\League of Legends',
-+            title: 'Choose the LoL installation path. e.g drive_c/Riot Games/League of Legends/ (click cancel if font is missing)',
+             title: 'Choose the LoL installation path. e.g C:\\Riot Games\\League of Legends',
              message: 'Choose the LoL installation path. e.g /Applications/League of Legends.app/',
              buttonLabel: 'Select Directory',
              properties: ['openDirectory', 'treatPackageAsDirectory', 'showHiddenFiles'],
@@ -120,40 +139,49 @@ diff -uraN original/moba-desktop/src/dialogs/select-game-folder-dialog.js modifi
 +        }).then(result => {
 +            return new Promise((res, rej) => {
 +                if(result.canceled) {
-+                    prompt({
-+                        title: 'Enter the LoL installation path',
-+                        label: 'Path must be exact',
-+                        value: '/drive_c/Riot Games/League of Legends/',
-+                        inputAttrs: {
-+                            type: 'text'
-+                        },
-+                        type: 'input'
-+                    }, window).then((r) => {
-+                        if(r === null) {
-+                            res(result);
-+                        } else {
-+                            res({filePaths:[r]});
-+                        }
-+                    });
-+                } else {
-+                    res(result);
-+                }
-+            })
-+        }).then((result) => __awaiter(this, void 0, void 0, function* () {
++                        prompt({
++                                title: 'Enter the LoL installation path',
++                                label: 'Path must be exact',
++                                value: '/drive_c/Riot Games/League of Legends/',
++                                inputAttrs: {
++                                    type: 'text'
++                                },
++                            type: 'input'
++                        }, window).then((r) => {
++                                if(r === null) {
++                                        res(result);
++                                    } else {
++                                        res({filePaths:[r]});
++                                    }
++                            });
++                    } else {
++                        res(result);
++                    }
++                })
++            }).then((result) => __awaiter(this, void 0, void 0, function* () {
              if (!result.canceled) {
                  const folder = result.filePaths ? result.filePaths[0] : null;
                  const isValid = yield lcu_connection_1.isValidLCUPath(folder);
-@@ -46,4 +68,4 @@
+                 if (isValid) {
+                     electron_1.ipcRenderer.send(ipc_messages_types_1.IPC_MESSAGE.SET_GAME_FOLDER_PATH, folder);
+                     return folder;
+@@ -43,7 +65,7 @@
+     else {
+         console.error('Unable to show select folder, please try later or contact support');
+         return Promise.resolve(null);
      }
  }
- exports.showSelectFolderDialog = showSelectFolderDialog;
+ exports.showSelectLolClientFolderDialog = showSelectLolClientFolderDialog;
 -//# sourceMappingURL=select-game-folder-dialog.js.map
 \ No newline at end of file
 +//# sourceMappingURL=select-game-folder-dialog.js.map
-diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
---- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 20:31:47.927349403 +0000
-+++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2021-11-04 20:31:47.954016070 +0000
-@@ -26,7 +26,7 @@
+diff -raN -U 6 original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js
+--- original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2022-02-02 18:14:04.041347557 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js	2022-02-02 18:14:07.874680746 +0000
+@@ -23,13 +23,13 @@
+         this.apiProvider = apiProvider;
+         this.currentGameId = null;
+         this.scheduler = null;
          this.reader = null;
          this.gamesInfoMap = null;
          this.gameStarted = (gameId, summoner, qType) => {
@@ -162,7 +190,13 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js m
                  return;
              if (!app_settings_1.getAppSettings().isTobiiEyeTrackerEnabled())
                  return;
-@@ -42,7 +42,7 @@
+             logs_1.gazeReaderLog.debug(`gameStarted ${gameId}`);
+             this.prepareSessionData(gameId, summoner, qType).then(sessionData => {
+                 if (sessionData) {
+@@ -39,13 +39,13 @@
+                     this.emit(gaze_reader_1.GazeReaderGameProcessorEvent.STATUS_CHANGED, '', desktop_types_1.TobiiGameStatus.ERROR);
+                     logs_1.gazeReaderLog.error('Unable to prepare session data');
+                 }
              });
          };
          this.gameFinished = (gameId) => {
@@ -171,17 +205,26 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-game-processor.js m
                  return;
              if (!app_settings_1.getAppSettings().isTobiiEyeTrackerEnabled())
                  return;
-@@ -202,4 +202,4 @@
+             logs_1.gazeReaderLog.debug(`gameFinished ${gameId}`);
+             if (this.currentGameId !== gameId) {
+                 this.emit(gaze_reader_1.GazeReaderGameProcessorEvent.STATUS_CHANGED, '', desktop_types_1.TobiiGameStatus.ERROR);
+@@ -199,7 +199,7 @@
+             this.scheduler = scheduler;
+         }
+     }
  }
  exports.GazeReaderGameProcessor = GazeReaderGameProcessor;
  GazeReaderGameProcessor.instance = null;
 -//# sourceMappingURL=gaze-reader-game-processor.js.map
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-game-processor.js.map
-diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified/moba-desktop/src/gaze-reader/gaze-reader-process.js
---- original/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 20:31:47.927349403 +0000
-+++ modified/moba-desktop/src/gaze-reader/gaze-reader-process.js	2021-11-04 20:31:47.954016070 +0000
-@@ -15,7 +15,7 @@
+diff -raN -U 6 original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified/moba-desktop/src/gaze-reader/gaze-reader-process.js
+--- original/moba-desktop/src/gaze-reader/gaze-reader-process.js	2022-02-02 18:14:04.041347557 +0000
++++ modified/moba-desktop/src/gaze-reader/gaze-reader-process.js	2022-02-02 18:14:07.874680746 +0000
+@@ -12,13 +12,13 @@
+     constructor() {
+         this.readerProcess = null;
+         this.unresolvedOpsList = null;
          this.spawn = (targetPath) => {
              var _a, _b;
              logs_1.gazeReaderLog.debug(`Spawn ${paths_1.TOBII_BINARY_LOCAL_PATH}, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
@@ -190,7 +233,13 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              if (this.readerProcess) {
                  logs_1.gazeReaderLog.error(`Already spawned, pid: ${(_b = this.readerProcess) === null || _b === void 0 ? void 0 : _b.pid}`);
-@@ -56,7 +56,7 @@
+                 return Promise.reject();
+             }
+             return new Promise((resolve, reject) => {
+@@ -53,13 +53,13 @@
+                 }
+             });
+         };
          this.kill = () => {
              var _a, _b;
              logs_1.gazeReaderLog.debug(`Kill, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
@@ -199,7 +248,13 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return;
              if (!this.readerProcess) {
                  logs_1.gazeReaderLog.error(`Already killed`);
-@@ -132,7 +132,7 @@
+                 return;
+             }
+             try {
+@@ -129,13 +129,13 @@
+             logs_1.gazeReaderLog.debug(`Exit, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
+             this.reset();
+         };
          this.write = (msg) => {
              var _a, _b;
              logs_1.gazeReaderLog.debug(`Write ${msg}, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
@@ -208,7 +263,13 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return;
              if (!this.readerProcess) {
                  logs_1.gazeReaderLog.error('Unable to write', `process is killed`);
-@@ -178,7 +178,7 @@
+                 return;
+             }
+             if (!this.readerProcess.stdin) {
+@@ -175,63 +175,63 @@
+         this.hasUnresolvedOps = () => {
+             var _a;
+             logs_1.gazeReaderLog.debug(`hasUnresolvedOps - ${JSON.stringify(this.unresolvedOpsList)}, pid: ${(_a = this.readerProcess) === null || _a === void 0 ? void 0 : _a.pid}`);
              return !!(this.unresolvedOpsList && this.unresolvedOpsList.length > 0);
          };
          this.isTobiiAvailable = () => {
@@ -217,7 +278,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.IS_TOBII_AVAILABLE);
-@@ -187,7 +187,7 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.IS_TOBII_AVAILABLE, resolve, reject);
+                 !hasOp && this.write(gaze_reader_1.GrOperationsRequestMessage.IS_TOBII_AVAILABLE);
              });
          };
          this.checkTrackerStatus = () => {
@@ -226,7 +288,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.CHECK_TRACKER_STATUS);
-@@ -196,7 +196,7 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.CHECK_TRACKER_STATUS, resolve, reject);
+                 !hasOp && this.write(gaze_reader_1.GrOperationsRequestMessage.CHECK_TRACKER_STATUS);
              });
          };
          this.sessionStart = (msg) => {
@@ -235,7 +298,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_START);
-@@ -205,7 +205,7 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_START, resolve, reject);
+                 !hasOp && this.write(`${gaze_reader_1.GrOperationsRequestMessage.SESSION_START} ${JSON.stringify(msg)}`);
              });
          };
          this.sessionUpdate = (msg) => {
@@ -244,7 +308,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_UPDATE);
-@@ -214,7 +214,7 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_UPDATE, resolve, reject);
+                 !hasOp && this.write(`${gaze_reader_1.GrOperationsRequestMessage.SESSION_UPDATE} ${JSON.stringify(msg)}`);
              });
          };
          this.sessionEnd = () => {
@@ -253,7 +318,8 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_END);
-@@ -223,7 +223,7 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.SESSION_END, resolve, reject);
+                 !hasOp && this.write(gaze_reader_1.GrOperationsRequestMessage.SESSION_END);
              });
          };
          this.stop = () => {
@@ -262,17 +328,23 @@ diff -uraN original/moba-desktop/src/gaze-reader/gaze-reader-process.js modified
                  return Promise.reject();
              return new Promise((resolve, reject) => {
                  const hasOp = this.hasAsyncOp(gaze_reader_1.GrAsyncOperation.PROCESS_STOP);
-@@ -234,4 +234,4 @@
+                 this.registerAsyncOp(gaze_reader_1.GrAsyncOperation.PROCESS_STOP, resolve, reject);
+                 !hasOp && this.write(gaze_reader_1.GrOperationsRequestMessage.PROCESS_STOP);
+             });
+         };
      }
  }
  exports.GazeReaderProcess = GazeReaderProcess;
 -//# sourceMappingURL=gaze-reader-process.js.map
 \ No newline at end of file
 +//# sourceMappingURL=gaze-reader-process.js.map
-diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
---- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 20:31:47.924016070 +0000
-+++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2021-11-04 20:31:47.954016070 +0000
-@@ -44,7 +44,7 @@
+diff -raN -U 6 original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
+--- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2022-02-02 18:14:04.028014224 +0000
++++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2022-02-02 18:14:07.874680746 +0000
+@@ -41,13 +41,13 @@
+ function importLolGameItems(gameItemsData) {
+     return __awaiter(this, void 0, void 0, function* () {
+         try {
              if (!gameItemsData.blocks.length)
                  return in_game_imports_types_1.LcuGameItemsImportStatus.EMPTY_BLOCKS_LIST;
              const processGamePath = yield lcu_connection_1.getLCUPathFromProcess();
@@ -281,17 +353,23 @@ diff -uraN original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-imp
              if (!gamePath)
                  return in_game_imports_types_1.LcuGameItemsImportStatus.GAME_PATH_NOT_FOUND;
              const filePath = path_1.default.join(gamePath, 'Config', 'Global', 'Recommended', '!mobalytics.json');
-@@ -70,4 +70,4 @@
+             yield fse.ensureFile(filePath);
+             const blocks = gameItemsData.blocks.map(it => (Object.assign(Object.assign({}, it), { recMath: false, minSummonerLevel: -1, maxSummonerLevel: -1, showIfSummonerSpell: '', hideIfSummonerSpell: '' })));
+             const content = {
+@@ -67,7 +67,7 @@
+             logs_1.lcuGeneralLog.error('Unable to import game items, error:', { error, gameItemsData });
+             return in_game_imports_types_1.LcuGameItemsImportStatus.INTERNAL_ERROR;
+         }
      });
  }
  exports.importLolGameItems = importLolGameItems;
 -//# sourceMappingURL=in-game-items-import.js.map
 \ No newline at end of file
 +//# sourceMappingURL=in-game-items-import.js.map
-diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
---- original/moba-desktop/src/main.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/main.js	2021-11-04 20:31:47.954016070 +0000
-@@ -1,6 +1,7 @@
+diff -raN -U 6 original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
+--- original/moba-desktop/src/main.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/main.js	2022-02-02 18:14:07.874680746 +0000
+@@ -1,12 +1,23 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
  const electron_1 = require("electron");
@@ -299,7 +377,8 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
  const app_1 = require("./app/app");
  const logs_1 = require("./utils/logs");
  require("../../moba-web/src/common/types/global.types");
-@@ -9,4 +10,14 @@
+ require("../../moba-web/src/common/utils/request-idle-polyfill");
+ const MakePromisesSafe = require('make-promises-safe');
  MakePromisesSafe.logError = (err) => logs_1.generalLog.error('Uncaught promise exception error: ', err);
  const gotTheLock = electron_1.app.requestSingleInstanceLock();
  gotTheLock ? app_1.runApp() : electron_1.app.quit();
@@ -316,10 +395,13 @@ diff -uraN original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
 +        console.error(err, 'Uncaught Exception thrown');
 +        process.exit(1);
 +    });
-diff -uraN original/moba-desktop/src/utils/desktop-bridge.js modified/moba-desktop/src/utils/desktop-bridge.js
---- original/moba-desktop/src/utils/desktop-bridge.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/utils/desktop-bridge.js	2021-11-04 20:31:47.954016070 +0000
-@@ -23,6 +23,7 @@
+diff -raN -U 6 original/moba-desktop/src/utils/desktop-bridge.js modified/moba-desktop/src/utils/desktop-bridge.js
+--- original/moba-desktop/src/utils/desktop-bridge.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/utils/desktop-bridge.js	2022-02-02 18:14:07.874680746 +0000
+@@ -20,12 +20,13 @@
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.bridge = void 0;
  const os = __importStar(require("os"));
  const path = __importStar(require("path"));
  const electron_1 = require("electron");
@@ -327,17 +409,26 @@ diff -uraN original/moba-desktop/src/utils/desktop-bridge.js modified/moba-deskt
  const select_game_folder_dialog_1 = require("../dialogs/select-game-folder-dialog");
  const ipc_renderer_1 = require("./ipc-renderer");
  const environment_1 = require("./environment");
-@@ -53,4 +54,4 @@
+ const select_folder_dialog_1 = require("../dialogs/select-folder-dialog");
+ const show_file_dialog_1 = require("../dialogs/show-file-dialog");
+ const platform = os.platform();
+@@ -54,7 +55,7 @@
+     },
      hideCurrentWindow: () => electron_1.remote.getCurrentWindow().hide(),
-     openSelectGameDialogInCurrentWindow: () => select_game_folder_dialog_1.showSelectFolderDialog(electron_1.remote.getCurrentWindow()),
+     openSelectGameDialogInCurrentWindow: () => select_game_folder_dialog_1.showSelectLolClientFolderDialog(electron_1.remote.getCurrentWindow()),
+     openSelectFolderDialogInCurrentWindow: () => select_folder_dialog_1.showSelectFolderDialog(electron_1.remote.getCurrentWindow()),
+     highlightFileInFileSystem: show_file_dialog_1.showFileDialog,
  };
 -//# sourceMappingURL=desktop-bridge.js.map
 \ No newline at end of file
 +//# sourceMappingURL=desktop-bridge.js.map
-diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
---- original/moba-desktop/src/utils/environment.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/utils/environment.js	2021-11-04 20:31:47.954016070 +0000
-@@ -23,15 +23,16 @@
+diff -raN -U 6 original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
+--- original/moba-desktop/src/utils/environment.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/utils/environment.js	2022-02-02 18:14:07.874680746 +0000
+@@ -20,18 +20,19 @@
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.DEV_APP_VERSION = exports.LolLogsSubPath = exports.RiotClientName = exports.RiotClientNameMac = exports.RiotClientNameWin = exports.LolProcessName = exports.LoLProcessNameMac = exports.LoLProcessNameWin = exports.IS_ELECTRON_DEV = exports.IS_JEST_TESTING = exports.isX64 = exports.isWin = exports.isOsX = void 0;
  const path = __importStar(require("path"));
  exports.isOsX = process.platform === 'darwin';
  exports.isWin = process.platform === 'win32';
@@ -359,10 +450,11 @@ diff -uraN original/moba-desktop/src/utils/environment.js modified/moba-desktop/
 -//# sourceMappingURL=environment.js.map
 \ No newline at end of file
 +//# sourceMappingURL=environment.js.map
-diff -uraN original/moba-desktop/src/utils/game-overlay/game-overlay-window.js modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js
---- original/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2021-11-04 20:31:47.954016070 +0000
-@@ -2,6 +2,7 @@
+diff -raN -U 6 original/moba-desktop/src/utils/game-overlay/game-overlay-window.js modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js
+--- original/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2022-02-02 18:14:07.874680746 +0000
+@@ -1,15 +1,16 @@
+ "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
  exports.onOverlayWindowContentLoaded = void 0;
  const electron_1 = require("electron");
@@ -370,63 +462,64 @@ diff -uraN original/moba-desktop/src/utils/game-overlay/game-overlay-window.js m
  const isOverlayPage = (content) => {
      return /mobalytics-in-game-overlay-marker/gim.test(content);
  };
-@@ -12,4 +13,4 @@
+ exports.onOverlayWindowContentLoaded = () => {
+     const pageHtml = window.document.documentElement.innerHTML;
+     if (!isOverlayPage(pageHtml)) {
+         const wnd = electron_1.remote.getCurrentWindow();
          wnd.close();
      }
  };
 -//# sourceMappingURL=game-overlay-window.js.map
 \ No newline at end of file
 +//# sourceMappingURL=game-overlay-window.js.map
-diff -uraN original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
---- original/moba-desktop/src/utils/lcu-connection.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/utils/lcu-connection.js	2021-11-04 20:31:47.954016070 +0000
-@@ -124,4 +124,4 @@
+diff -raN -U 6 original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
+--- original/moba-desktop/src/utils/lcu-connection.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/utils/lcu-connection.js	2022-02-02 18:14:07.874680746 +0000
+@@ -121,7 +121,7 @@
+         catch (e) {
+             return false;
+         }
      });
  }
  exports.isValidLCUPath = isValidLCUPath;
 -//# sourceMappingURL=lcu-connection.js.map
 \ No newline at end of file
 +//# sourceMappingURL=lcu-connection.js.map
-diff -uraN original/moba-desktop/src/windows/about/about.preload.js modified/moba-desktop/src/windows/about/about.preload.js
---- original/moba-desktop/src/windows/about/about.preload.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/windows/about/about.preload.js	2021-11-04 20:31:47.954016070 +0000
-@@ -21,10 +21,11 @@
- Object.defineProperty(exports, "__esModule", { value: true });
- const os = __importStar(require("os"));
- const electron_1 = require("electron");
-+electron_1.remote = require('@electron/remote');
- const environment_1 = require("../../utils/environment");
- const state = {
-     version: environment_1.IS_ELECTRON_DEV ? environment_1.DEV_APP_VERSION : electron_1.remote.app.getVersion(),
-     platform: os.platform(),
- };
- window.__ABOUT_PAGE_BRIDGE__ = state;
--//# sourceMappingURL=about.preload.js.map
-\ No newline at end of file
-+//# sourceMappingURL=about.preload.js.map
-diff -uraN original/moba-desktop/src/windows/about/about.window.js modified/moba-desktop/src/windows/about/about.window.js
---- original/moba-desktop/src/windows/about/about.window.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/windows/about/about.window.js	2021-11-04 20:31:47.954016070 +0000
-@@ -47,6 +47,7 @@
+diff -raN -U 6 original/moba-desktop/src/windows/about/about.window.js modified/moba-desktop/src/windows/about/about.window.js
+--- original/moba-desktop/src/windows/about/about.window.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/windows/about/about.window.js	2022-02-02 18:14:07.874680746 +0000
+@@ -45,12 +45,13 @@
+                 allowRunningInsecureContent: false,
+                 experimentalFeatures: false,
                  enableRemoteModule: true,
+                 autoplayPolicy: 'user-gesture-required',
              },
          });
 +        require("@electron/remote/main").enable(aboutWindow.webContents);
          navigation_1.initNavigationSecurity(aboutWindow);
          aboutWindow.setMenu(null);
          aboutWindow.loadURL(navigation_1.getSafetyWindowURL('/html/about-window.html'));
-@@ -61,4 +62,4 @@
+         aboutWindow.on('ready-to-show', () => aboutWindow && aboutWindow.show());
+         aboutWindow.on('closed', () => {
+             aboutWindow && aboutWindow.destroy();
+@@ -59,7 +60,7 @@
+     }
+ }
+ function toggleAboutWindow() {
      aboutWindow ? (aboutWindow.isVisible() ? aboutWindow.hide() : aboutWindow.show()) : createAboutWindow();
  }
  exports.toggleAboutWindow = toggleAboutWindow;
 -//# sourceMappingURL=about.window.js.map
 \ No newline at end of file
 +//# sourceMappingURL=about.window.js.map
-diff -uraN original/moba-desktop/src/windows/game-overlay/game-overlay.window.js modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js
---- original/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2021-11-04 20:31:47.954016070 +0000
-@@ -55,7 +55,9 @@
+diff -raN -U 6 original/moba-desktop/src/windows/game-overlay/game-overlay.window.js modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js
+--- original/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2022-02-02 18:14:07.874680746 +0000
+@@ -53,10 +53,12 @@
+             allowRunningInsecureContent: false,
+             experimentalFeatures: false,
              enableRemoteModule: true,
+             autoplayPolicy: 'user-gesture-required',
          },
      });
 +    require("@electron/remote/main").enable(overlayWindow.webContents);
@@ -437,20 +530,26 @@ diff -uraN original/moba-desktop/src/windows/game-overlay/game-overlay.window.js
 -//# sourceMappingURL=game-overlay.window.js.map
 \ No newline at end of file
 +//# sourceMappingURL=game-overlay.window.js.map
-diff -uraN original/moba-desktop/src/windows/main/main.preload.js modified/moba-desktop/src/windows/main/main.preload.js
---- original/moba-desktop/src/windows/main/main.preload.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/windows/main/main.preload.js	2021-11-04 20:31:47.954016070 +0000
-@@ -27,4 +27,4 @@
+diff -raN -U 6 original/moba-desktop/src/windows/main/main.preload.js modified/moba-desktop/src/windows/main/main.preload.js
+--- original/moba-desktop/src/windows/main/main.preload.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/windows/main/main.preload.js	2022-02-02 18:14:07.874680746 +0000
+@@ -24,7 +24,7 @@
+ const environment_1 = require("../../../../moba-web/src/common/utils/environment");
+ const desktop_types_1 = require("../../../../moba-web/src/common/types/desktop/desktop.types");
+ window.__DESKTOP__BRIDGE__ = desktop_bridge_1.bridge;
  window.__APP_ENV__ = environment_1.serializeAppConfig(appConfig, { APP_IS_DESKTOP: 'true' });
  window.__WINDOW_TYPE__ = desktop_types_1.DesktopWindowType.MAIN;
  console.info('App Logs: ', desktop_bridge_1.bridge.logsPath);
 -//# sourceMappingURL=main.preload.js.map
 \ No newline at end of file
 +//# sourceMappingURL=main.preload.js.map
-diff -uraN original/moba-desktop/src/windows/main/main.window.js modified/moba-desktop/src/windows/main/main.window.js
---- original/moba-desktop/src/windows/main/main.window.js	2021-11-04 20:31:47.917349404 +0000
-+++ modified/moba-desktop/src/windows/main/main.window.js	2021-11-04 20:31:47.957349403 +0000
-@@ -75,10 +75,12 @@
+diff -raN -U 6 original/moba-desktop/src/windows/main/main.window.js modified/moba-desktop/src/windows/main/main.window.js
+--- original/moba-desktop/src/windows/main/main.window.js	2022-02-02 18:14:04.024680891 +0000
++++ modified/moba-desktop/src/windows/main/main.window.js	2022-02-02 18:14:07.874680746 +0000
+@@ -73,16 +73,18 @@
+                 experimentalFeatures: false,
+                 enableRemoteModule: true,
+                 autoplayPolicy: 'user-gesture-required',
              },
              show: false,
              resizable: true,
@@ -463,8 +562,14 @@ diff -uraN original/moba-desktop/src/windows/main/main.window.js modified/moba-d
          appWindowState.manage(mainWindow);
          mainWindow.loadURL(navigation_1.getSafetyWindowURL(url_1.AppPath.ONBOARDING_ROOT));
          navigation_1.initNavigationSecurity(mainWindow);
-@@ -241,4 +243,4 @@
-     window.loadURL(navigation_1.getSafetyWindowURL(url_1.AppPath.FORCE_DESKTOP_APP_UPDATE));
+         mainWindow.on('ready-to-show', () => {
+             if (mainWindow) {
+                 mainWindow.show();
+@@ -245,7 +247,7 @@
+     const window = ensureMainWindow();
+     if (getMainWindowUrl() !== navigation_1.getSafetyWindowURL(url_1.AppPath.FORCE_DESKTOP_APP_UPDATE)) {
+         window.loadURL(navigation_1.getSafetyWindowURL(url_1.AppPath.FORCE_DESKTOP_APP_UPDATE));
+     }
  }
  exports.redirectToForceUpdatePage = redirectToForceUpdatePage;
 -//# sourceMappingURL=main.window.js.map
