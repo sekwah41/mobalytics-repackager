@@ -16,7 +16,10 @@ module.exports = {
         publish: ["github"],
         target: [
             "AppImage",
-            "snap"
+            "deb",
+            "rpm",
+            "snap",
+            "pacman"
         ]
     },
     protocols: [{

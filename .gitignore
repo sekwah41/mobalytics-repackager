@@ -9,6 +9,8 @@
 /src/modified/
 /src/original/
 /build/
+/moba-shared/
 
 *.log
 /moba-package-backup.json
+/package-lock.json

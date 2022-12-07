@@ -1,6 +1,6 @@
 {
   "name": "mobalytics-repackager",
-  "version": "1.87.12",
+  "version": "1.102.378",
   "description": "Mobalytics tool for Linux",
   "main": "src/extract.js",
   "repository": "https://github.com/sekwah41/mobalinux",
@@ -11,31 +11,31 @@
     "extract": "node src/extract.js",
     "patch-package": "cd app && rm -f ../moba-package-backup.json && cp package.json ../moba-package-backup.json && patch -i ../package.diff",
     "generate-package-diff": "cd app && diff -uaN ../moba-package-backup.json package.json > ../package.diff || true",
-    "postextract": "yarn patch-package && electron-builder install-app-deps",
+    "postextract": "npm run patch-package && electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
-    "postinstall": "yarn setup",
+    "postinstall": "npm run setup",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
     "generate-patches": "cd src && diff -raN -U 6 original modified > ../patch.diff || true",
-    "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
+    "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && npm run apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
-    "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",
-    "deep-clean": "yarn clean && rm -rf node_modules",
+    "clean": "rm -rf app && rm -rf moba-shared && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",
+    "deep-clean": "npm run clean && rm -rf node_modules",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
     "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
-    "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && yarn dist",
-    "snap-build": "yarn deep-clean && snapcraft build",
-    "snap-remote-build": "yarn deep-clean && snapcraft remote-build --launchpad-accept-public-upload"
+    "setup": "npm run clean && npm run extract && npm run create-patched-src && npm run apply-patch && npm run dist",
+    "snap-build": "npm run deep-clean && snapcraft build",
+    "snap-remote-build": "npm run deep-clean && snapcraft remote-build --launchpad-accept-public-upload"
   },
   "dependencies": {
-    "7zip-bin": "5.1.1",
-    "asar": "3.1.0",
+    "7zip-bin": "5.2.0",
+    "@electron/asar": "3.2.2",
     "node-7z": "3.0.0",
     "progress": "2.0.3",
     "progress-download": "1.0.4",
     "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "electron": "14.2.0",
-    "electron-builder": "22.13.1"
+    "electron": "19.1.7",
+    "electron-builder": "23.6.0"
   }
 }
