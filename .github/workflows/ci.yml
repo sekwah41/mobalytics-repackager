@@ -26,27 +26,23 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npm ci
-    - name: Upload AppImage
-      uses: actions/upload-artifact@v3.1.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          name: AppImage
-          path: dist/*.AppImage
-    - name: Upload Artifacts
+    - name: Upload Artifacts 1/4
       uses: actions/upload-artifact@v3.1.1
       with:
           name: AppImage
           path: dist/*.AppImage
-    - uses: actions/upload-artifact@v3.1.1
+    - name: Upload Artifacts 2/4
+      uses: actions/upload-artifact@v3.1.1
       with:
           name: Snap
           path: dist/*.snap
-    - uses: actions/upload-artifact@v3.1.1
+    - name: Upload Artifacts 3/4
+      uses: actions/upload-artifact@v3.1.1
       with:
           name: DEB
           path: dist/*.deb
-    - uses: actions/upload-artifact@v3.1.1
+    - name: Upload Artifacts 4/4
+      uses: actions/upload-artifact@v3.1.1
       with:
           name: RPM
           path: dist/*.rpm
