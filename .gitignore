@@ -13,4 +13,3 @@
 
 *.log
 /moba-package-backup.json
-/package-lock.json

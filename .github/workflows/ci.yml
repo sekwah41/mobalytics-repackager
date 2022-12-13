@@ -1,35 +1,38 @@
 name: Build
 
-on: [push]
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [19.x]
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.x
-      - name: Cache .yarn/cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('package.json') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Setup Project
-        run: |
-          yarn install --immutable
-      - name: Build Electron App
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn dist
-      - uses: actions/upload-artifact@v2
-        with:
-          name: AppImage
-          path: dist/*.AppImage
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Snap
-          path: dist/*.snap
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      shell: bash
+      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+    - uses: actions/cache@v3
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-node-
+    - name: Setup Project and build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm ci
 

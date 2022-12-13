@@ -18,8 +18,7 @@ module.exports = {
             "AppImage",
             "deb",
             "rpm",
-            "snap",
-            "pacman"
+            "snap"
         ]
     },
     protocols: [{
