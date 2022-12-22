@@ -9,9 +9,8 @@
   "private": true,
   "scripts": {
     "extract": "node src/extract.js",
-    "patch-package": "cd app && rm -f ../moba-package-backup.json && cp package.json ../moba-package-backup.json && patch -i ../package.diff",
     "generate-package-diff": "cd app && diff -uaN ../moba-package-backup.json package.json > ../package.diff || true",
-    "postextract": "npm run patch-package && electron-builder install-app-deps",
+    "postextract": "electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
     "postinstall": "npm run setup",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
