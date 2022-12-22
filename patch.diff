@@ -133,10 +133,10 @@ diff --color -raN -U 6 original/moba-desktop/src/utils/desktop-bridge.js modifie
 +    isLinux: platform === 'linux',
      logsPath: path.resolve(remote_1.app.getPath('logs')),
      settings: null,
+     settingsV2: null,
+     logsService: null,
      ipcRendererSend: ipc_renderer_1.ipcRendererSend,
      ipcRendererOn: ipc_renderer_1.ipcRendererOn,
-     ipcRendererInvoke: ipc_renderer_1.ipcRendererInvoke,
-     forceShowCurrentWindow: () => {
 diff --color -raN -U 6 original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
 --- original/moba-desktop/src/utils/environment.js	2022-12-06 21:34:33.301584822 -0300
 +++ modified/moba-desktop/src/utils/environment.js	2022-11-25 13:54:08.907827359 -0300
