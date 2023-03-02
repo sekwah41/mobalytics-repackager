@@ -3,8 +3,8 @@
   "version": "1.102.592",
   "description": "Mobalytics tool for Linux",
   "main": "src/extract.js",
-  "repository": "https://github.com/sekwah41/mobalinux",
-  "author": "Sekwah",
+  "repository": "https://github.com/emaxoda/mobalinux",
+  "author": "emmaxoda",
   "license": "MIT",
   "private": true,
   "scripts": {
