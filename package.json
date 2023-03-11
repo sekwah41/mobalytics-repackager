@@ -1,6 +1,6 @@
 {
   "name": "mobalytics-repackager",
-  "version": "1.102.598",
+  "version": "1.103.5",
   "description": "Mobalytics tool for Linux",
   "main": "src/extract.js",
   "repository": "https://github.com/emaxoda/mobalinux",
