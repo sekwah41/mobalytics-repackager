@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:46:14.381197108 +0100
-+++ src/modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:46:14.507864600 +0100
+--- src/original/moba-desktop/src/utils/game-overlay/game-overlay-window.js
++++ src/modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js
 @@ -1,7 +1,7 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });

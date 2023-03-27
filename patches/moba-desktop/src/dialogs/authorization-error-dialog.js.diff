@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:46:14.434530790 +0100
-+++ src/modified/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:46:14.504531246 +0100
+--- src/original/moba-desktop/src/dialogs/authorization-error-dialog.js
++++ src/modified/moba-desktop/src/dialogs/authorization-error-dialog.js
 @@ -23,7 +23,7 @@
  const Sentry = __importStar(require("@sentry/browser"));
  const logs_1 = require("../utils/logs");

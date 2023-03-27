@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.434530790 +0100
-+++ src/modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.504531246 +0100
+--- src/original/moba-desktop/src/dialogs/select-game-folder-dialog.js
++++ src/modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
 @@ -11,21 +11,44 @@
  Object.defineProperty(exports, "__esModule", { value: true });
  exports.showSelectLolClientFolderDialog = void 0;
