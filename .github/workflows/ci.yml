@@ -30,6 +30,14 @@ jobs:
           path: dist/*.AppImage
       - uses: actions/upload-artifact@v2
         with:
+          name: Deb
+          path: dist/*.deb
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Rpm
+          path: dist/*.rpm
+      - uses: actions/upload-artifact@v2
+        with:
           name: Snap
           path: dist/*.snap
 
