@@ -1,6 +1,14 @@
 --- src/original/moba-desktop/src/utils/lcu-connection.js
 +++ src/modified/moba-desktop/src/utils/lcu-connection.js
-@@ -124,4 +124,4 @@
+@@ -113,6 +113,7 @@
+ exports.getLCUPathFromFs = getLCUPathFromFs;
+ function isValidLCUPath(dirPath) {
+     return __awaiter(this, void 0, void 0, function* () {
++        console.log(dirPath, environment_1.LolProcessName);
+         if (!dirPath)
+             return false;
+         try {
+@@ -124,4 +125,4 @@
      });
  }
  exports.isValidLCUPath = isValidLCUPath;

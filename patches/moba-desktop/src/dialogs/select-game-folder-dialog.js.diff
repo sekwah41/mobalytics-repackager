@@ -1,11 +1,9 @@
 --- src/original/moba-desktop/src/dialogs/select-game-folder-dialog.js
 +++ src/modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
-@@ -11,21 +11,44 @@
- Object.defineProperty(exports, "__esModule", { value: true });
+@@ -12,22 +12,43 @@
  exports.showSelectLolClientFolderDialog = void 0;
  const ipc_messages_types_1 = require("../../../moba-shared/src/common/types/desktop/ipc-messages.types");
--const remote_1 = require("@electron/remote");
-+const remote_1 = require("@electron/remote/main");
+ const remote_1 = require("@electron/remote");
 +const prompt = require('electron-prompt');
  const ipc_renderer_1 = require("../utils/ipc-renderer");
  function showSelectLolClientFolderDialog(window) {
@@ -46,11 +44,12 @@
              if (!result.canceled) {
                  const folder = result.filePaths ? result.filePaths[0] : null;
                  const setupResult = yield ipc_renderer_1.ipcRendererInvoke(ipc_messages_types_1.IPC_MESSAGE.SET_GAME_FOLDER_PATH, folder);
-+                alert("Folder set to: " + JSON.stringify(result) + setupResult);
                  if (!setupResult) {
-                     alert('Invalid game folder, please, try again.');
+-                    alert('Invalid game folder, please, try again.');
                      return null;
-@@ -46,4 +69,4 @@
+                 }
+                 return folder;
+@@ -46,4 +67,4 @@
      }
  }
  exports.showSelectLolClientFolderDialog = showSelectLolClientFolderDialog;

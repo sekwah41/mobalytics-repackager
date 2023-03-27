@@ -8,8 +8,11 @@
  let mainWindow;
  let appWindowState;
  function getMainWindowState() {
-@@ -73,11 +74,13 @@
+@@ -71,13 +72,16 @@
+                 preload: path.join(__dirname, 'main.preload.js'),
+                 nodeIntegration: false,
                  contextIsolation: false,
++                sandbox: false,
                  webSecurity: true,
                  allowRunningInsecureContent: false,
 +                enableRemoteModule: true,
@@ -22,7 +25,7 @@
              frame: false,
              titleBarStyle: 'hidden',
              maximizable: true,
-@@ -92,6 +95,8 @@
+@@ -92,6 +96,8 @@
                  mainWindow.focus();
              }
          });
