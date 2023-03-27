@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:46:14.504531246 +0100
+@@ -60,7 +60,7 @@
+             return authFlowData;
+         }
+         else {
+-            throw Error(`Auth flow data doesn't match: ${code}, ${state}, ${scope}, ${JSON.stringify(authFlowData)}`);
++            throw Error(`Auth flow data doesn't match: ${code}, ${state}, ${scope}, Data: ${JSON.stringify(authFlowData)}`);
+         }
+     })
+         .then(authFlowData => receiveToken(code, authFlowData.verifier, state))

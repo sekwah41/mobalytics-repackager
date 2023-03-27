@@ -1,0 +1,9 @@
+--- src/original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:46:14.437864144 +0100
++++ src/modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:46:14.504531246 +0100
+@@ -20,4 +20,4 @@
+     post_game_highlights_ipc_1.initPostGameHighlightsIpc();
+ }
+ exports.init = init;
+-//# sourceMappingURL=ipc-protocol.js.map
+\ No newline at end of file
++//# sourceMappingURL=ipc-protocol.js.map

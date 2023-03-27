@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:46:14.507864600 +0100
+@@ -20,7 +20,7 @@
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const os = __importStar(require("os"));
+-const remote_1 = require("@electron/remote");
++const remote_1 = require("@electron/remote/main");
+ const app_config_1 = require("../../../../moba-web/src/app.config");
+ const ipc_renderer_1 = require("../../utils/ipc-renderer");
+ const version_const_1 = require("../../utils/version.const");

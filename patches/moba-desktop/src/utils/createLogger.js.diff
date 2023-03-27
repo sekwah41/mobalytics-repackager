@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/utils/createLogger.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/utils/createLogger.js	2023-03-27 13:46:14.507864600 +0100
+@@ -52,7 +52,7 @@
+ function createLogger({ name, level = app_config_1.DESKTOP_LOGGER_LEVEL, maxSize = '20mb' }) {
+     const transports = [];
+     const dirname = electron_1.app === null || electron_1.app === void 0 ? void 0 : electron_1.app.getPath('logs');
+-    const normalizedLevel = enums_1.isStrEnumValue(logger_1.LogLevel, level) ? level : logger_1.LogLevel.debug;
++    const normalizedLevel = !environment_1.IS_ELECTRON_DEV ? level : logger_1.LogLevel.debug;
+     if (dirname) {
+         transports.push(new winston.transports.DailyRotateFile({
+             dirname,

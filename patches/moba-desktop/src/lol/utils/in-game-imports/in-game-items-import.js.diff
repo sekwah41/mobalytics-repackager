@@ -1,0 +1,18 @@
+--- src/original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:46:14.387863819 +0100
++++ src/modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:46:14.507864600 +0100
+@@ -44,7 +44,7 @@
+             if (!gameItemsData.blocks.length)
+                 return in_game_imports_types_1.LcuGameItemsImportStatus.EMPTY_BLOCKS_LIST;
+             const processGamePath = yield lcu_connection_1.getLCUPathFromProcess();
+-            const gamePath = processGamePath || root_store_1.getAppSettings().getGameFolderPath();
++            const gamePath = (environment_1.isLinux ? null : processGamePath) || root_store_1.getAppSettings().getGameFolderPath();
+             if (!gamePath)
+                 return in_game_imports_types_1.LcuGameItemsImportStatus.GAME_PATH_NOT_FOUND;
+             const filePath = path_1.default.join(gamePath, 'Config', 'Global', 'Recommended', '!mobalytics.json');
+@@ -70,4 +70,4 @@
+     });
+ }
+ exports.importLolGameItems = importLolGameItems;
+-//# sourceMappingURL=in-game-items-import.js.map
+\ No newline at end of file
++//# sourceMappingURL=in-game-items-import.js.map

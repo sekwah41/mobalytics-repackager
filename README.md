@@ -13,6 +13,11 @@ To try snapcraft building locally try `snapcraft build` rather than using electr
 
 ![Mobalytics](.github/images/img.png)
 
+## Generating patches
+I have left the old commands in there for anyone who has forks, old versions or local versions of the project.
+
+Though have switched the default commands over to the new ones.
+
 ## Future support
 
 I am not sure how long Mobalytics is going to keep supporting the non overwolf version of their software and I have been relatively busy lately.

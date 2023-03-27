@@ -1,0 +1,20 @@
+--- src/original/moba-desktop/src/utils/environment.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/utils/environment.js	2023-03-27 13:46:14.507864600 +0100
+@@ -24,6 +24,7 @@
+ exports.APP_USER_MODEL_ID = 'MobalyticsHQ.DesktopApp';
+ exports.isOsX = process.platform === 'darwin';
+ exports.isWin = process.platform === 'win32';
++exports.isLinux = process.platform === 'linux';
+ exports.isX64 = process.arch === 'x64';
+ exports.IS_JEST_TESTING = process.env.JEST_WORKER_ID !== undefined;
+ exports.IS_ELECTRON_DEV = require('electron-is-dev');
+@@ -32,7 +33,7 @@
+ exports.LolProcessName = exports.isWin ? exports.LoLProcessNameWin : exports.LoLProcessNameMac;
+ exports.RiotClientNameWin = 'RiotClientServices.exe';
+ exports.RiotClientNameMac = '';
+-exports.RiotClientName = exports.isWin ? exports.RiotClientNameWin : exports.RiotClientNameMac;
++exports.RiotClientName = (exports.isWin || exports.isLinux) ? exports.RiotClientNameWin : exports.RiotClientNameMac;
+ exports.LolLogsSubPath = path.join('Logs', 'GameLogs');
+ exports.AppExecPath = `"${path.normalize(path.resolve(process.execPath))}"`;
+ //# sourceMappingURL=environment.js.map
+\ No newline at end of file

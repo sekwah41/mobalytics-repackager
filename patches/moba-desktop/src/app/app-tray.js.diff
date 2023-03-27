@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/app/app-tray.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/app/app-tray.js	2023-03-27 13:46:14.504531246 +0100
+@@ -26,7 +26,7 @@
+ const environment_1 = require("../utils/environment");
+ const app_utils_1 = require("./app-utils");
+ const main_utils_1 = require("../windows/main/main.utils");
+-const iconName = environment_1.isWin ? 'tray-icon-win.ico' : 'tray-icon-mac.png';
++const iconName = environment_1.isWin ? 'tray-icon-win.ico' : (environment_1.isLinux ? 'icon.png' : 'tray-icon-mac.png');
+ const trayIcon = path.resolve(paths_1.RESOURCES_PATH, iconName);
+ let tray = null;
+ function init() {
