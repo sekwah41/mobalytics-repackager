@@ -1,0 +1,33 @@
+--- src/original/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:46:14.507864600 +0100
+@@ -34,6 +34,7 @@
+ const root_store_1 = require("../../common/store/root-store");
+ const lang_1 = require("../../../../moba-shared/src/common/types/lang");
+ const url_1 = require("../../../../moba-shared/src/common/types/url");
++const environment_1 = require("../../utils/environment");
+ let mainWindow;
+ let appWindowState;
+ function getMainWindowState() {
+@@ -73,11 +74,13 @@
+                 contextIsolation: false,
+                 webSecurity: true,
+                 allowRunningInsecureContent: false,
++                enableRemoteModule: true,
+                 experimentalFeatures: false,
+                 autoplayPolicy: 'user-gesture-required',
+             },
+             show: false,
+             resizable: true,
++            icon: path.join(__dirname, "../../../../../resources/icons/512x512.png"),
+             frame: false,
+             titleBarStyle: 'hidden',
+             maximizable: true,
+@@ -92,6 +95,8 @@
+                 mainWindow.focus();
+             }
+         });
++        console.log("Is Dev", environment_1.IS_ELECTRON_DEV);
++        if(environment_1.IS_ELECTRON_DEV) mainWindow.webContents.openDevTools({ mode: 'detach' });
+         mainWindow.on('unresponsive', () => {
+             logs_1.generalLog.error('main window is unresponsive');
+             window_unresponsive_dialog_1.showUnresponsiveMainWindowDialog();

@@ -1,0 +1,59 @@
+--- src/original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.504531246 +0100
+@@ -11,21 +11,44 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.showSelectLolClientFolderDialog = void 0;
+ const ipc_messages_types_1 = require("../../../moba-shared/src/common/types/desktop/ipc-messages.types");
+-const remote_1 = require("@electron/remote");
++const remote_1 = require("@electron/remote/main");
++const prompt = require('electron-prompt');
+ const ipc_renderer_1 = require("../utils/ipc-renderer");
+ function showSelectLolClientFolderDialog(window) {
+     if (remote_1.dialog) {
+         return remote_1.dialog
+             .showOpenDialog(window, {
+-            title: 'Choose the LoL installation path. e.g C:\\Riot Games\\League of Legends',
+-            message: 'Choose the LoL installation path. e.g /Applications/League of Legends.app/',
++            title: 'Choose the LoL installation path. e.g $WINEPREFIX/drive_c/Riot Games/League of Legends',
++            message: 'Choose the LoL installation path. e.g $WINEPREFIX/drive_c/Riot Games/League of Legends/',
+             buttonLabel: 'Select Directory',
+             properties: ['openDirectory', 'treatPackageAsDirectory', 'showHiddenFiles'],
+-        })
+-            .then((result) => __awaiter(this, void 0, void 0, function* () {
++              }).then(result => {
++              return new Promise((res, rej) => {
++                          if(result.canceled) {
++                                      prompt({
++                                                  title: 'Enter the LoL installation path',
++                                                  label: 'Path must be exact',
++                                                  value: '$WINEPREFIX/drive_c/Riot Games/League of Legends/',
++                                                  inputAttrs: {
++                                                      type: 'text'
++                                                  },
++                                          type: 'input'
++                                      }, window).then((r) => {
++                                                  if(r === null) {
++                                                              res(result);
++                                                          } else {
++                                                              res({filePaths:[r]});
++                                                          }
++                                              });
++                                  } else {
++                                      res(result);
++                                  }
++                          })
++                  }).then((result) => __awaiter(this, void 0, void 0, function* () {
+             if (!result.canceled) {
+                 const folder = result.filePaths ? result.filePaths[0] : null;
+                 const setupResult = yield ipc_renderer_1.ipcRendererInvoke(ipc_messages_types_1.IPC_MESSAGE.SET_GAME_FOLDER_PATH, folder);
++                alert("Folder set to: " + JSON.stringify(result) + setupResult);
+                 if (!setupResult) {
+                     alert('Invalid game folder, please, try again.');
+                     return null;
+@@ -46,4 +69,4 @@
+     }
+ }
+ exports.showSelectLolClientFolderDialog = showSelectLolClientFolderDialog;
+-//# sourceMappingURL=select-game-folder-dialog.js.map
+\ No newline at end of file
++//# sourceMappingURL=select-game-folder-dialog.js.map

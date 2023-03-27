@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/utils/navigation.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/utils/navigation.js	2023-03-27 13:46:14.507864600 +0100
+@@ -34,7 +34,7 @@
+ }
+ exports.initNavigationSecurity = initNavigationSecurity;
+ function getSafetyWindowURL(path) {
+-    const url = new URL(path || '', environment_1.IS_ELECTRON_DEV ? `https://localhost.mobalytics.gg:3000` : `https://${app_config_1.APP_DOMAIN}`)
++    const url = new URL(path || '', `https://${app_config_1.APP_DOMAIN}`)
+         .href;
+     logs_1.generalLog.debug('safety window url utils: ', { url });
+     return url;

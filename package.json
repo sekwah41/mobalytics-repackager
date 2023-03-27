@@ -13,18 +13,20 @@
     "yar": "cd app && diff -uaN ../moba-package-backup.json package.json > ../package.diff || true",
     "postextract": "yarn patch-package && electron-builder install-app-deps",
     "dist": "electron-builder --config electron-builder/config.js",
-    "reset-and-build": "yarn generate-patches && yarn reset-and-apply-patch && yarn dist",
+    "reset-and-build": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn dist",
     "postinstall": "yarn setup",
     "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
     "generate-patches": "cd src && diff -raN -U 6 original modified > ../patch.diff || true",
-    "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn apply-patch",
+    "new-gen-patches": "node src/recursive-diff.js",
+    "new-apply-patch": "node src/recursive-patch.js",
+    "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn new-apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
     "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",
     "deep-clean": "yarn clean && rm -rf node_modules",
     "test-build": "./dist/linux-unpacked/mobalytics-desktop",
     "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
-    "patch-and-run-electron": "yarn generate-patches && yarn reset-and-apply-patch && yarn run-electron",
-    "patch-and-run-standalone": "yarn generate-patches && yarn reset-and-apply-patch && yarn dist --linux dir && ./dist/linux-unpacked/mobalytics-desktop",
+    "patch-and-run-electron": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn run-electron",
+    "patch-and-run-standalone": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn dist --linux dir && ./dist/linux-unpacked/mobalytics-desktop",
     "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && node src/fix_package.js"
   },
   "dependencies": {
@@ -33,7 +35,7 @@
     "node-7z": "3.0.0",
     "progress": "2.0.3",
     "progress-download": "1.0.4",
-    "rimraf": "3.0.2"
+    "rimraf": "4.4.1"
   },
   "devDependencies": {
     "electron": "23.2.0",

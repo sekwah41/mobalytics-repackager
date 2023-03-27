@@ -1,0 +1,10 @@
+--- src/original/moba-desktop/src/app/app.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/app/app.js	2023-03-27 13:46:14.504531246 +0100
+@@ -73,7 +73,6 @@
+         main_utils_1.showOrCreateWindow();
+         app_tray_1.init();
+         deep_linking_1.addDeepLinkingListeners();
+-        setInterval(promo_1.maybeShowSplashScreen, 1000 * 60 * 10);
+     }));
+     electron_1.app.on('window-all-closed', () => {
+     });

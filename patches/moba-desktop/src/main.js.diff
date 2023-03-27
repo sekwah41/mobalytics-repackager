@@ -1,0 +1,19 @@
+--- src/original/moba-desktop/src/main.js	2023-03-27 13:46:14.381197108 +0100
++++ src/modified/moba-desktop/src/main.js	2023-03-27 13:46:14.507864600 +0100
+@@ -9,4 +9,14 @@
+ MakePromisesSafe.logError = (err) => logs_1.generalLog.error('Uncaught promise exception error: ', err);
+ const gotTheLock = electron_1.app.requestSingleInstanceLock();
+ gotTheLock ? app_1.runApp() : electron_1.app.quit();
+-//# sourceMappingURL=main.js.map
+\ No newline at end of file
++//# sourceMappingURL=main.js.map
++process
++    .on('unhandledRejection', (reason, p) => {
++        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: `Uncaught issue: ${reason}`});
++        console.error(reason, 'Unhandled Rejection at Promise', p);
++    })
++    .on('uncaughtException', err => {
++        electron_1.dialog.showMessageBoxSync(null, {title: "Uncaught Error", message: `Uncaught issue: ${JSON.stringify(err)}`});
++        console.error(err, 'Uncaught Exception thrown');
++        process.exit(1);
++    });

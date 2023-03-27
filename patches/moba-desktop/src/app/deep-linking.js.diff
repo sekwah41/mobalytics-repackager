@@ -1,0 +1,35 @@
+--- src/original/moba-desktop/src/app/deep-linking.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/app/deep-linking.js	2023-03-27 13:46:14.504531246 +0100
+@@ -34,7 +34,7 @@
+ const main_utils_1 = require("../windows/main/main.utils");
+ function initDeepLinking() {
+     electron_1.app.removeAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME);
+-    if (environment_1.IS_ELECTRON_DEV && environment_1.isWin) {
++    if (process.defaultApp) {
+         electron_1.app.setAsDefaultProtocolClient(app_config_1.MOBA_PROTOCOL_NAME, process.execPath, [path.resolve(process.argv[1])]);
+     }
+     else {
+@@ -51,8 +51,15 @@
+         logs_1.appUrlsLog.debug(`open-url: ${url}`);
+         main_utils_1.showAndRestoreMainWindow();
+     });
++    // Check clipboard to see if the request is in the clipboard.
++    electron_1.app.on('browser-window-focus', () => {
++        const text = electron_1.clipboard.readText('clipboard');
++        if (text.startsWith(`${app_config_1.MOBA_PROTOCOL_NAME}:`)) {
++            processDeepLinkingUrl(text);
++        }
++    });
+     electron_1.app.on('second-instance', (_e, argv) => {
+-        if (environment_1.isWin) {
++        if (environment_1.isWin || environment_1.isLinux) {
+             const url = argv.find(it => it.startsWith(`${app_config_1.MOBA_PROTOCOL_NAME}:`));
+             url && processDeepLinkingUrl(url);
+         }
+@@ -90,4 +97,4 @@
+         logs_1.appUrlsLog.error('Unknown moba protocol communication url: ', { url });
+     }
+ }
+-//# sourceMappingURL=deep-linking.js.map
+\ No newline at end of file
++//# sourceMappingURL=deep-linking.js.map

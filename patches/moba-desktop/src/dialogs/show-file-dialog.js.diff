@@ -1,0 +1,11 @@
+--- src/original/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ src/modified/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:46:14.504531246 +0100
+@@ -1,7 +1,7 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.showFileDialog = void 0;
+-const remote_1 = require("@electron/remote");
++const remote_1 = require("@electron/remote/main");
+ function showFileDialog(filePath) {
+     remote_1.shell.showItemInFolder(filePath);
+ }
