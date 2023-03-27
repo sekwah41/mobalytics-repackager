@@ -13,5 +13,21 @@ To try snapcraft building locally try `snapcraft build` rather than using electr
 
 ![Mobalytics](.github/images/img.png)
 
+## Future support
 
-Due to some weirdness with the snapcraft that I dont really want to figure out(kept using wrong node version and yarn version)
+I am not sure how long Mobalytics is going to keep supporting the non overwolf version of their software and I have been relatively busy lately.
+Though I plan to try to support this until they stop supporting this version.
+
+## AppImage
+As of electron-builder 21 the appimage no longer builds with desktop integration natively.
+
+Please install https://github.com/TheAssassin/AppImageLauncher to properly install the desktop integration.
+
+I've personally been having some issues with this so have been focusing on the snap version.
+
+# Adding a desktop entry & mimetype manually
+Please see this issue https://github.com/sekwah41/mobalytics-repackager/issues/23 for more information.
+
+If you want a icon you will need to extract the icon from the asar-resources.
+
+[@spstarr](https://github.com/spstarr) has given an example of how they have done it.

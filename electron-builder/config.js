@@ -14,8 +14,15 @@ module.exports = {
         icon: "resources/icons/",
         category: "Game",
         publish: ["github"],
+        desktop: {
+            "Name": "Mobalytics",
+            "MimeType": "x-scheme-handler/mobalytics",
+        },
+        mimeTypes: ["x-scheme-handler/mobalytics"],
         target: [
             "AppImage",
+            "deb",
+            "rpm",
             "snap"
         ]
     },
