@@ -69,8 +69,22 @@ function removeIfExists(path) {
 
     const node_modules = path.join(rebuildFolder, "node_modules");
 
+    
+
+    const moba_shared = path.join(node_modules, "@mobalytics", "shared");
+
+    const moba_dist = path.join(__dirname, "../moba-shared/dist");
+
+    
+    
+    if(!fs.existsSync(moba_dist)) {
+        console.log("Saving needed module (moba-shared)");
+        fs.cpSync(moba_shared, moba_dist, {recursive: true})
+    } else {
+        console.log("Found moba-shared, skipping step.");
+    }
+
     console.log("Deleting node_modules (these ones are meant for windows)");
     removeIfExists(node_modules);
 
 })();
-
