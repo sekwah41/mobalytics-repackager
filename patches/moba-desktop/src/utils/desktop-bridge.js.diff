@@ -1,14 +1,5 @@
 --- src/original/moba-desktop/src/utils/desktop-bridge.js
 +++ src/modified/moba-desktop/src/utils/desktop-bridge.js
-@@ -22,7 +22,7 @@
- exports.bridge = void 0;
- const os = __importStar(require("os"));
- const path = __importStar(require("path"));
--const remote_1 = require("@electron/remote");
-+const remote_1 = require("@electron/remote/main");
- const select_game_folder_dialog_1 = require("../dialogs/select-game-folder-dialog");
- const ipc_renderer_1 = require("./ipc-renderer");
- const select_folder_dialog_1 = require("../dialogs/select-folder-dialog");
 @@ -32,8 +32,9 @@
  exports.bridge = {
      version: remote_1.app.getVersion() === '0.0.1' ? version_const_1.DEV_DESKTOP_APP_VERSION : remote_1.app.getVersion(),
