@@ -15,6 +15,24 @@ diff -raN -U 6 original/moba-desktop/src/app/app.js modified/moba-desktop/src/ap
      electron_1.app.on('before-quit', () => {
          var _a;
          const lolSettingsFetcher = lol_settings_fetcher_1.LolSettingsFetcher.getInstance();
+diff -raN -U 6 original/moba-desktop/src/app/app-tray.js modified/moba-desktop/src/app/app-tray.js
+--- original/moba-desktop/src/app/app-tray.js	2023-03-27 13:07:41.396504880 +0100
++++ modified/moba-desktop/src/app/app-tray.js	2023-03-27 13:15:31.382979575 +0100
+@@ -23,13 +23,13 @@
+ const path = __importStar(require("path"));
+ const electron_1 = require("electron");
+ const paths_1 = require("../paths");
+ const environment_1 = require("../utils/environment");
+ const app_utils_1 = require("./app-utils");
+ const main_utils_1 = require("../windows/main/main.utils");
+-const iconName = environment_1.isWin ? 'tray-icon-win.ico' : 'tray-icon-mac.png';
++const iconName = environment_1.isWin ? 'tray-icon-win.ico' : (environment_1.isLinux ? 'icon.png' : 'tray-icon-mac.png');
+ const trayIcon = path.resolve(paths_1.RESOURCES_PATH, iconName);
+ let tray = null;
+ function init() {
+     if (!tray) {
+         tray = new electron_1.Tray(trayIcon);
+         const contextMenu = electron_1.Menu.buildFromTemplate([
 diff -raN -U 6 original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
 --- original/moba-desktop/src/app/deep-linking.js	2023-03-27 13:07:41.396504880 +0100
 +++ modified/moba-desktop/src/app/deep-linking.js	2023-03-27 13:07:41.466505350 +0100
