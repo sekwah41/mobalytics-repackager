@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:46:14.381197108 +0100
-+++ src/modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:46:14.507864600 +0100
+--- src/original/moba-desktop/src/windows/game-overlay/game-overlay.window.js
++++ src/modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js
 @@ -50,6 +50,7 @@
              preload: path.join(__dirname, 'game-overlay.preload.js'),
              nodeIntegration: false,

@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/main.js	2023-03-27 13:46:14.381197108 +0100
-+++ src/modified/moba-desktop/src/main.js	2023-03-27 13:46:14.507864600 +0100
+--- src/original/moba-desktop/src/main.js
++++ src/modified/moba-desktop/src/main.js
 @@ -9,4 +9,14 @@
  MakePromisesSafe.logError = (err) => logs_1.generalLog.error('Uncaught promise exception error: ', err);
  const gotTheLock = electron_1.app.requestSingleInstanceLock();

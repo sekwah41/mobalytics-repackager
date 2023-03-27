@@ -1,5 +1,5 @@
---- src/original/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:46:14.381197108 +0100
-+++ src/modified/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:46:14.507864600 +0100
+--- src/original/moba-desktop/src/windows/about/about.window.js
++++ src/modified/moba-desktop/src/windows/about/about.window.js
 @@ -44,6 +44,7 @@
                  contextIsolation: false,
                  webSecurity: true,

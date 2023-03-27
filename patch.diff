@@ -1,6 +1,6 @@
 diff -raN -U 6 original/moba-desktop/src/app/app.js modified/moba-desktop/src/app/app.js
---- original/moba-desktop/src/app/app.js	2023-03-27 13:07:41.396504880 +0100
-+++ modified/moba-desktop/src/app/app.js	2023-03-27 13:07:41.463171992 +0100
+--- original/moba-desktop/src/app/app.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/app/app.js	2023-03-27 13:46:14.504531246 +0100
 @@ -70,13 +70,12 @@
          ipc_protocol_1.init();
          app_internal_webview_1.init();
@@ -16,8 +16,8 @@ diff -raN -U 6 original/moba-desktop/src/app/app.js modified/moba-desktop/src/ap
          var _a;
          const lolSettingsFetcher = lol_settings_fetcher_1.LolSettingsFetcher.getInstance();
 diff -raN -U 6 original/moba-desktop/src/app/app-tray.js modified/moba-desktop/src/app/app-tray.js
---- original/moba-desktop/src/app/app-tray.js	2023-03-27 13:07:41.396504880 +0100
-+++ modified/moba-desktop/src/app/app-tray.js	2023-03-27 13:15:31.382979575 +0100
+--- original/moba-desktop/src/app/app-tray.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/app/app-tray.js	2023-03-27 13:46:14.504531246 +0100
 @@ -23,13 +23,13 @@
  const path = __importStar(require("path"));
  const electron_1 = require("electron");
@@ -34,8 +34,8 @@ diff -raN -U 6 original/moba-desktop/src/app/app-tray.js modified/moba-desktop/s
          tray = new electron_1.Tray(trayIcon);
          const contextMenu = electron_1.Menu.buildFromTemplate([
 diff -raN -U 6 original/moba-desktop/src/app/deep-linking.js modified/moba-desktop/src/app/deep-linking.js
---- original/moba-desktop/src/app/deep-linking.js	2023-03-27 13:07:41.396504880 +0100
-+++ modified/moba-desktop/src/app/deep-linking.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/app/deep-linking.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/app/deep-linking.js	2023-03-27 13:46:14.504531246 +0100
 @@ -31,13 +31,13 @@
  const deep_linking_types_1 = require("../../../moba-shared/src/common/types/deep-linking.types");
  const game_overlay_1 = require("../utils/game-overlay/game-overlay");
@@ -85,8 +85,8 @@ diff -raN -U 6 original/moba-desktop/src/app/deep-linking.js modified/moba-deskt
 \ No newline at end of file
 +//# sourceMappingURL=deep-linking.js.map
 diff -raN -U 6 original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js
---- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:07:41.396504880 +0100
-+++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:46:14.437864144 +0100
++++ modified/moba-desktop/src/app/ipc-protocol/ipc-protocol.js	2023-03-27 13:46:14.504531246 +0100
 @@ -17,7 +17,7 @@
      lc_emulation_ipc_1.initLcEmulationIpc();
      lol_status_bar_ipc_1.initLolStatusBarIpc();
@@ -98,8 +98,8 @@ diff -raN -U 6 original/moba-desktop/src/app/ipc-protocol/ipc-protocol.js modifi
 \ No newline at end of file
 +//# sourceMappingURL=ipc-protocol.js.map
 diff -raN -U 6 original/moba-desktop/src/auth/auth-flow.js modified/moba-desktop/src/auth/auth-flow.js
---- original/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:07:41.393171525 +0100
-+++ modified/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/auth/auth-flow.js	2023-03-27 13:46:14.504531246 +0100
 @@ -57,13 +57,13 @@
      return cookies_1.getAuthFlowData()
          .then(authFlowData => {
@@ -116,8 +116,8 @@ diff -raN -U 6 original/moba-desktop/src/auth/auth-flow.js modified/moba-desktop
          cookies_1.removeAuthFlowData().catch(authorization_error_dialog_1.showAuthorizationError);
          auth_refresh_scheduler_1.startRefreshCycle();
 diff -raN -U 6 original/moba-desktop/src/dialogs/authorization-error-dialog.js modified/moba-desktop/src/dialogs/authorization-error-dialog.js
---- original/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:07:41.393171525 +0100
-+++ modified/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/dialogs/authorization-error-dialog.js	2023-03-27 13:46:14.504531246 +0100
 @@ -20,13 +20,13 @@
  };
  Object.defineProperty(exports, "__esModule", { value: true });
@@ -148,8 +148,8 @@ diff -raN -U 6 original/moba-desktop/src/dialogs/authorization-error-dialog.js m
  //# sourceMappingURL=authorization-error-dialog.js.map
 \ No newline at end of file
 diff -raN -U 6 original/moba-desktop/src/dialogs/select-folder-dialog.js modified/moba-desktop/src/dialogs/select-folder-dialog.js
---- original/moba-desktop/src/dialogs/select-folder-dialog.js	2023-03-27 13:07:41.393171525 +0100
-+++ modified/moba-desktop/src/dialogs/select-folder-dialog.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/dialogs/select-folder-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/dialogs/select-folder-dialog.js	2023-03-27 13:46:14.504531246 +0100
 @@ -8,13 +8,13 @@
          step((generator = generator.apply(thisArg, _arguments || [])).next());
      });
@@ -166,8 +166,8 @@ diff -raN -U 6 original/moba-desktop/src/dialogs/select-folder-dialog.js modifie
              .showOpenDialog(window, {
              title: 'Choose a folder to store video highlights',
 diff -raN -U 6 original/moba-desktop/src/dialogs/select-game-folder-dialog.js modified/moba-desktop/src/dialogs/select-game-folder-dialog.js
---- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:07:41.393171525 +0100
-+++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/dialogs/select-game-folder-dialog.js	2023-03-27 13:46:14.504531246 +0100
 @@ -8,27 +8,50 @@
          step((generator = generator.apply(thisArg, _arguments || [])).next());
      });
@@ -235,8 +235,8 @@ diff -raN -U 6 original/moba-desktop/src/dialogs/select-game-folder-dialog.js mo
 \ No newline at end of file
 +//# sourceMappingURL=select-game-folder-dialog.js.map
 diff -raN -U 6 original/moba-desktop/src/dialogs/show-file-dialog.js modified/moba-desktop/src/dialogs/show-file-dialog.js
---- original/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:07:41.393171525 +0100
-+++ modified/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:07:41.466505350 +0100
+--- original/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:46:14.434530790 +0100
++++ modified/moba-desktop/src/dialogs/show-file-dialog.js	2023-03-27 13:46:14.504531246 +0100
 @@ -1,9 +1,9 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
@@ -250,8 +250,8 @@ diff -raN -U 6 original/moba-desktop/src/dialogs/show-file-dialog.js modified/mo
  //# sourceMappingURL=show-file-dialog.js.map
 \ No newline at end of file
 diff -raN -U 6 original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js
---- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:07:41.346504544 +0100
-+++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:07:41.476505416 +0100
+--- original/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:46:14.387863819 +0100
++++ modified/moba-desktop/src/lol/utils/in-game-imports/in-game-items-import.js	2023-03-27 13:46:14.507864600 +0100
 @@ -41,13 +41,13 @@
  function importLolGameItems(gameItemsData) {
      return __awaiter(this, void 0, void 0, function* () {
@@ -278,8 +278,8 @@ diff -raN -U 6 original/moba-desktop/src/lol/utils/in-game-imports/in-game-items
 \ No newline at end of file
 +//# sourceMappingURL=in-game-items-import.js.map
 diff -raN -U 6 original/moba-desktop/src/main.js modified/moba-desktop/src/main.js
---- original/moba-desktop/src/main.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/main.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/main.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/main.js	2023-03-27 13:46:14.507864600 +0100
 @@ -6,7 +6,17 @@
  require("../../moba-web/src/common/types/global.types");
  require("../../moba-web/src/common/utils/request-idle-polyfill");
@@ -301,8 +301,8 @@ diff -raN -U 6 original/moba-desktop/src/main.js modified/moba-desktop/src/main.
 +        process.exit(1);
 +    });
 diff -raN -U 6 original/moba-desktop/src/utils/app-settings.js modified/moba-desktop/src/utils/app-settings.js
---- original/moba-desktop/src/utils/app-settings.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/app-settings.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/app-settings.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/app-settings.js	2023-03-27 13:46:14.507864600 +0100
 @@ -10,21 +10,21 @@
  const logs_1 = require("./logs");
  const environment_1 = require("./environment");
@@ -329,8 +329,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/app-settings.js modified/moba-des
      object_1.objectKeys(settings).forEach(key => {
          if (es6_1.default(settings_types_1.DesktopSettingsDefaultValues[key], settings[key]) ||
 diff -raN -U 6 original/moba-desktop/src/utils/createLogger.js modified/moba-desktop/src/utils/createLogger.js
---- original/moba-desktop/src/utils/createLogger.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/createLogger.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/createLogger.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/createLogger.js	2023-03-27 13:46:14.507864600 +0100
 @@ -49,13 +49,13 @@
  });
  const consoleLogsFormat = winston.format.combine(winston.format.colorize(), winston.format.timestamp(), winston.format.align(), winston.format.splat(), winston.format.prettyPrint({ colorize: true }), printFn);
@@ -347,8 +347,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/createLogger.js modified/moba-des
              datePattern: 'YYYY-MM-DD',
              maxSize,
 diff -raN -U 6 original/moba-desktop/src/utils/desktop-bridge.js modified/moba-desktop/src/utils/desktop-bridge.js
---- original/moba-desktop/src/utils/desktop-bridge.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/desktop-bridge.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/desktop-bridge.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/desktop-bridge.js	2023-03-27 13:46:14.507864600 +0100
 @@ -19,24 +19,25 @@
      return result;
  };
@@ -378,8 +378,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/desktop-bridge.js modified/moba-d
      ipcRendererSend: ipc_renderer_1.ipcRendererSend,
      ipcRendererOn: ipc_renderer_1.ipcRendererOn,
 diff -raN -U 6 original/moba-desktop/src/utils/environment.js modified/moba-desktop/src/utils/environment.js
---- original/moba-desktop/src/utils/environment.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/environment.js	2023-03-27 13:11:56.128209212 +0100
+--- original/moba-desktop/src/utils/environment.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/environment.js	2023-03-27 13:46:14.507864600 +0100
 @@ -21,18 +21,19 @@
  Object.defineProperty(exports, "__esModule", { value: true });
  exports.AppExecPath = exports.LolLogsSubPath = exports.RiotClientName = exports.RiotClientNameMac = exports.RiotClientNameWin = exports.LolProcessName = exports.LoLProcessNameMac = exports.LoLProcessNameWin = exports.IS_ELECTRON_DEV = exports.IS_JEST_TESTING = exports.isX64 = exports.isWin = exports.isOsX = exports.APP_USER_MODEL_ID = void 0;
@@ -403,8 +403,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/environment.js modified/moba-desk
  //# sourceMappingURL=environment.js.map
 \ No newline at end of file
 diff -raN -U 6 original/moba-desktop/src/utils/game-overlay/game-overlay-window.js modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js
---- original/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:07:41.339837834 +0100
-+++ modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/game-overlay/game-overlay-window.js	2023-03-27 13:46:14.507864600 +0100
 @@ -1,10 +1,10 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
@@ -418,8 +418,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/game-overlay/game-overlay-window.
      const pageHtml = window.document.documentElement.innerHTML;
      if (!isOverlayPage(pageHtml)) {
 diff -raN -U 6 original/moba-desktop/src/utils/lcu-connection.js modified/moba-desktop/src/utils/lcu-connection.js
---- original/moba-desktop/src/utils/lcu-connection.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/lcu-connection.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/lcu-connection.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/lcu-connection.js	2023-03-27 13:46:14.507864600 +0100
 @@ -121,7 +121,7 @@
          catch (e) {
              return false;
@@ -431,8 +431,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/lcu-connection.js modified/moba-d
 \ No newline at end of file
 +//# sourceMappingURL=lcu-connection.js.map
 diff -raN -U 6 original/moba-desktop/src/utils/navigation.js modified/moba-desktop/src/utils/navigation.js
---- original/moba-desktop/src/utils/navigation.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/utils/navigation.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/utils/navigation.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/utils/navigation.js	2023-03-27 13:46:14.507864600 +0100
 @@ -31,13 +31,13 @@
          event.preventDefault();
          electron_1.shell.openExternal(url);
@@ -450,8 +450,8 @@ diff -raN -U 6 original/moba-desktop/src/utils/navigation.js modified/moba-deskt
  //# sourceMappingURL=navigation.js.map
 \ No newline at end of file
 diff -raN -U 6 original/moba-desktop/src/windows/about/about.preload.js modified/moba-desktop/src/windows/about/about.preload.js
---- original/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/windows/about/about.preload.js	2023-03-27 13:46:14.507864600 +0100
 @@ -17,13 +17,13 @@
      if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
      __setModuleDefault(result, mod);
@@ -468,8 +468,8 @@ diff -raN -U 6 original/moba-desktop/src/windows/about/about.preload.js modified
      version: remote_1.app.getVersion() === '0.0.1' ? version_const_1.DEV_DESKTOP_APP_VERSION : remote_1.app.getVersion(),
      stage: app_config_1.APP_STAGE === 'production' ? null : app_config_1.APP_DOMAIN,
 diff -raN -U 6 original/moba-desktop/src/windows/about/about.window.js modified/moba-desktop/src/windows/about/about.window.js
---- original/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/windows/about/about.window.js	2023-03-27 13:46:14.507864600 +0100
 @@ -41,12 +41,13 @@
              webPreferences: {
                  preload: path.join(__dirname, 'about.preload.js'),
@@ -495,8 +495,8 @@ diff -raN -U 6 original/moba-desktop/src/windows/about/about.window.js modified/
 \ No newline at end of file
 +//# sourceMappingURL=about.window.js.map
 diff -raN -U 6 original/moba-desktop/src/windows/game-overlay/game-overlay.window.js modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js
---- original/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:07:41.479838772 +0100
+--- original/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/windows/game-overlay/game-overlay.window.js	2023-03-27 13:46:14.507864600 +0100
 @@ -47,12 +47,13 @@
          enableLargerThanScreen: true,
          webPreferences: {
@@ -512,8 +512,8 @@ diff -raN -U 6 original/moba-desktop/src/windows/game-overlay/game-overlay.windo
          },
      });
 diff -raN -U 6 original/moba-desktop/src/windows/main/main.window.js modified/moba-desktop/src/windows/main/main.window.js
---- original/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:07:41.336504478 +0100
-+++ modified/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:11:27.508017836 +0100
+--- original/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:46:14.381197108 +0100
++++ modified/moba-desktop/src/windows/main/main.window.js	2023-03-27 13:46:14.507864600 +0100
 @@ -31,12 +31,13 @@
  const navigation_1 = require("../../utils/navigation");
  const window_unresponsive_dialog_1 = require("../../dialogs/window-unresponsive-dialog");

@@ -15,10 +15,10 @@
     "dist": "electron-builder --config electron-builder/config.js",
     "reset-and-build": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn dist",
     "postinstall": "yarn setup",
-    "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && cd src/modified && patch -p1 -i ../../patch.diff",
+    "create-patched-src": "rm -rf src/modified && rm -rf src/original && cp -R app/electron-src src/original && cp -R app/electron-src src/modified && node src/recursive-patch.js src/modified",
     "generate-patches": "cd src && diff -raN -U 6 original modified > ../patch.diff || true",
     "new-gen-patches": "node src/recursive-diff.js",
-    "new-apply-patch": "node src/recursive-patch.js",
+    "new-apply-patch": "node src/recursive-patch.js app/electron-src",
     "reset-and-apply-patch": "rm -rf app/electron-src && cp -R src/original app/electron-src && yarn new-apply-patch",
     "apply-patch": "cd app/electron-src && patch -p1 -i ../../patch.diff",
     "clean": "rm -rf app && rm -rf src/original && rm -rf src/modified && rm -rf build-resources && rm -rf dist",
@@ -27,7 +27,7 @@
     "run-electron": "cd app && electron ./electron-src/moba-desktop/src/main.js",
     "patch-and-run-electron": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn run-electron",
     "patch-and-run-standalone": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn dist --linux dir && ./dist/linux-unpacked/mobalytics-desktop",
-    "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn apply-patch && node src/fix_package.js"
+    "setup": "yarn clean && yarn extract && yarn create-patched-src && yarn new-apply-patch && node src/fix_package.js"
   },
   "dependencies": {
     "7zip-bin": "5.1.1",
