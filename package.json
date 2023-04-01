@@ -11,7 +11,7 @@
     "extract": "node src/extract.js",
     "patch-package": "cd app && rm -f ../moba-package-backup.json && cp package.json ../moba-package-backup.json && patch -i ../package.diff",
     "yar": "cd app && diff -uaN ../moba-package-backup.json package.json > ../package.diff || true",
-    "postextract": "yarn patch-package && electron-builder install-app-deps",
+    "postextract": "yarn patch-package && cd app && yarn install --production",
     "dist": "electron-builder --config electron-builder/config.js",
     "reset-and-build": "yarn new-gen-patches && yarn reset-and-apply-patch && yarn dist",
     "postinstall": "yarn setup",
