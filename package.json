@@ -38,7 +38,7 @@
     "rimraf": "4.4.1"
   },
   "devDependencies": {
-    "electron": "23.2.0",
+    "electron": "24.4.0",
     "electron-builder": "23.6.0"
   }
 }
