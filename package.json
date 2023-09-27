@@ -35,7 +35,7 @@
     "node-7z": "3.0.0",
     "progress": "2.0.3",
     "progress-download": "1.0.4",
-    "rimraf": "4.4.1"
+    "rimraf": "5.0.5"
   },
   "devDependencies": {
     "electron": "23.2.0",
