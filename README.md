@@ -1,5 +1,8 @@
 MobaLinux
 =========
+**Sadly due to the change to overwolf this wont work with the new mobalytics, so I am putting this project into archive for now.**
+
+
 The whole point of this project is to try to get Mobalytics running directly on linux.
 This should help both with performance as well as logging in (Looking into adding a protocol handler).
 
